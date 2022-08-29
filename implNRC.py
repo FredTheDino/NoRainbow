@@ -86,7 +86,7 @@ def visualizeColoring(graph, coloring):
 #         , frozenset(["a", "c", "f"])
 #         , frozenset(["a", "c", "f"])
 #         ])
-g = randomGraph(3, 1000, ["a", "b", "c", "d"])
+g = randomGraph(3, 4, ["a", "b", "c", "d", "e"])
 
 coloring = detNRC(g)
 visualizeColoring(g, coloring)

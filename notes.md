@@ -28,6 +28,7 @@ $r = \textrm{the number of colors and nodes per edge}$
  - There has to be at least $r$ nodes
  - There cannot be more than $e(r-1)$ nodes of a single color
  - There has to be at least 2 nodes of the same color in each edge
+ - Maybe go the other way and loosen constraints?
 
 (I feel like there's something more that can be said for each edge)
 
@@ -43,14 +44,15 @@ Some ways to do this quickly is:
 ## Visual representation
 Either a table with edges and nodes then markings to show what each node is connected to.
 ```
-   1 2 3 4
-a: *   *    (1)
-b: * * * *  (2)
-c: * *   *  (2)
-d:   *      (3)
-e:     * *  (1)
+a: *   (0)
+b: **  (-)
+c:  ** (-)
+d: *** (2)
+e:   * (1)
 ```
 All vertical slices are edges. All horizontal slices are nodes.
+
+Here the `-` means "deafult-color", which is equivalent to 0. But the algorithm from the paper only assigns as few colors as possible.
 
 Or nodes on a 2d plane with areas marking out the edges.
 (Not as forgiving when making ASCII art :sad:)
