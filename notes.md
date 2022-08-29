@@ -19,6 +19,7 @@ This problem is NP-complete and can be mapped to SAT. (When `r >= 3`)
  - Use the invariant `each color must be used at least once in the graph` (The paper uses this approach both for the deterministic and the randomized algorithm)
  - Reason about the different mappings between colors and maybe divide and conquer the search space somehow?
  - Checking if two colorings are isomorphic can be done in linear time, so it might be a really good speed up
+ - Pruning the search space better
 
 ### Invariants of the problem, no matter how helpful they are
 $e = \textrm{the number of edges}$,
@@ -53,3 +54,8 @@ All vertical slices are edges. All horizontal slices are nodes.
 
 Or nodes on a 2d plane with areas marking out the edges.
 (Not as forgiving when making ASCII art :sad:)
+
+## The idea of the algoritm
+
+The main point of the algoritm is that we can partition the solution space and search each "block" individually.
+The algoritm does some clever things to limit searches that are guaranteed to be unfruitful. But the idea is really solid.
