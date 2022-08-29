@@ -27,7 +27,6 @@ def detLocalSearch(r, graph, x, g):
 
     for edge in edges(graph):
         if len(edge.intersection(frozen)) != r - 1: continue
-        # Everything is color 0 if it doesn't exist
         v = next(edge - frozen)
         newColoring = coloring.copy()
         newFrozen = frozen.add(v)
@@ -56,6 +55,7 @@ def getN(graph):
     return len(nodes(graph))
 
 def getColor(node, coloring):
+    # Everything is color 0 if it doesn't exist
     return coloring.get(node) or 0
 
 def nodes(graph):
