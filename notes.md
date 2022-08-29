@@ -18,6 +18,7 @@ This problem is NP-complete and can be mapped to SAT. (When `r >= 3`)
  - If we can split the graph into two components such that no edge carries between the components, we can "bucket-fill" these halves. In my head it makes sense.
  - Use the invariant `each color must be used at least once in the graph` (The paper uses this approach both for the deterministic and the randomized algorithm)
  - Reason about the different mappings between colors and maybe divide and conquer the search space somehow?
+ - Checking if two colorings are isomorphic can be done in linear time, so it might be a really good speed up
 
 ### Invariants of the problem, no matter how helpful they are
 $e = \textrm{the number of edges}$,
