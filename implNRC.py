@@ -64,13 +64,15 @@ def nodes(graph):
 def edges(graph):
     return iter(graph)
 
-def randomGraph(r, nodes):
-    return set(frozenset(sample(nodes, r)) for n in range(0, len(nodes)))
+def randomGraph(r, numEdges, nodes):
+    return set(frozenset(sample(nodes, r)) for n in range(0, numEdges))
 
 def visualizeColoring(graph, coloring):
-    for n in sorted(nodes(graph)):
+    sortedNodes = sorted(nodes(graph))
+    sortedEdges = sorted(edges(graph), key=lambda e: tuple(sorted(sortedNodes.index(v) for v in e)))
+    for n in sortedNodes:
         print(f"{n} ", end="")
-        for edge in edges(graph):
+        for edge in sortedEdges:
             if n in edge:
                 print(f"*", end="")
             else:
@@ -84,7 +86,7 @@ def visualizeColoring(graph, coloring):
 #         , frozenset(["a", "c", "f"])
 #         , frozenset(["a", "c", "f"])
 #         ])
-g = randomGraph(4, ["a", "b", "c", "d", "e", "f", "g"])
+g = randomGraph(3, 1000, ["a", "b", "c", "d"])
 
 coloring = detNRC(g)
 visualizeColoring(g, coloring)
