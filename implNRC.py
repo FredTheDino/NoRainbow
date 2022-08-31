@@ -1,5 +1,5 @@
-from itertools import (combinations, chain)
-from random import sample
+from itertools import combinations
+from graph import *
 
 def detNRC(graph):
     r = getR(graph)
@@ -20,16 +20,17 @@ def candidatePair(graph, r):
 def detLocalSearch(r, graph, x, g):
     (coloring, frozen) = x
     # There's something I don't understand here?
-    rainbowEdges = findRainbowEdges(r, graph, coloring)
+    rainbowEdges = set(findRainbowEdges(r, graph, coloring))
     if g == 0 and len(rainbowEdges) != 0: return None
-    if any(edge.isSubSet(frozen) for edge in rainbowEdges): return None
+    if any(edge.issubset(frozen) for edge in rainbowEdges): return None
     if isNoRainbowColoring(r, graph, coloring): return coloring
 
     for edge in edges(graph):
         if len(edge.intersection(frozen)) != r - 1: continue
-        v = next(edge - frozen)
+        v = next(iter(edge - frozen))
         newColoring = coloring.copy()
-        newFrozen = frozen.add(v)
+        newFrozen = frozen.copy()
+        newFrozen.add(v)
         for c in range(1, r + 1):
             newColoring[v] = c
             if coloring := detLocalSearch(r, graph, (newColoring, newFrozen), g - 1):
@@ -37,57 +38,16 @@ def detLocalSearch(r, graph, x, g):
         return None
     return None
 
-def isNoRainbowColoring(r, graph, coloring):
-    return all(not isRainbowEdge(r, edge, coloring) for edge in edges(graph))
-
-def isRainbowEdge(r, edge, coloring):
-    return set(getColor(v, coloring) for v in edge) == r
-
-def findRainbowEdges(r, graph, coloring):
-    yield from (edge for edge in edges(graph) if isRainbowEdge(r, edge, coloring))
-
-def getR(graph):
-    r = len(next(edges(graph)))
-    assert all(len(edge) == r for edge in edges(graph)), f"The graph isn't {r}-regular"
-    return r
-
-def getN(graph):
-    return len(nodes(graph))
-
-def getColor(node, coloring):
-    # Everything is color 0 if it doesn't exist
-    return coloring.get(node) or 0
-
-def nodes(graph):
-    return set(chain(*edges(graph)))
-
-def edges(graph):
-    return iter(graph)
-
-def randomGraph(r, numEdges, nodes):
-    return set(frozenset(sample(nodes, r)) for n in range(0, numEdges))
-
-def visualizeColoring(graph, coloring):
-    sortedNodes = sorted(nodes(graph))
-    sortedEdges = sorted(edges(graph), key=lambda e: tuple(sorted(sortedNodes.index(v) for v in e)))
-    for n in sortedNodes:
-        print(f"{n} ", end="")
-        for edge in sortedEdges:
-            if n in edge:
-                print(f"*", end="")
-            else:
-                print(f" ", end="")
-        if n in coloring:
-            print(f" {getColor(n, coloring)}", end="")
-        print("")
-
-# graph = set([ frozenset(["a", "b", "c"])
-#         , frozenset(["b", "d", "e"])
-#         , frozenset(["a", "c", "f"])
-#         , frozenset(["a", "c", "f"])
-#         ])
-g = randomGraph(3, 4, ["a", "b", "c", "d", "e"])
-
-coloring = detNRC(g)
-visualizeColoring(g, coloring)
+if __name__ == "__main__":
+    # graph = set([ frozenset(["a", "b", "c"])
+    #         , frozenset(["b", "d", "e"])
+    #         , frozenset(["a", "c", "f"])
+    #         , frozenset(["a", "c", "f"])
+    #         ])
+    g = completeGraph(4, list(range(6)))
+    stateCounter = 0
+    seen = set()
+    coloring = detNRC(g)
+    # visualizeColoring(g, coloring)
+    print(stateCounter)
 
