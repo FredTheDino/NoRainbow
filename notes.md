@@ -87,33 +87,82 @@ DetLocalSearch(H, c, F, g):
 ```
 
 # No Rainbow Algoritm Suggestion 1
-After trying to "visualize" the multi-dimensional state-space of the searching algorithm I reached the conclusion
-that there might be states that are visited multiple times. The coloring make up an equivalence class (there are states which have the same structure, for example the colorings: (0, 1, 2) and (1, 2, 0) since they can be mapped to eachother with a bijective function).
-We can define a function that maps these tuples to `the equivalence class representative` by picking the equivalent coloring that is sorted first by all colorings.
-Another way of saying this is: we can recolor the coloring so the first color we hit is always color `0`, and the seconds color is `1` etc... This can be done in linear time and is efficient and well defined.
-We now know if we've seen this isomorphic state before and can stop the searching.
+After trying to "visualize" the multi-dimensional state-space of the searching
+algorithm I reached the conclusion that there might be states that are visited
+multiple times. The coloring make up an equivalence class (there are states
+which have the same structure, for example the colorings: (0, 1, 2) and (1, 2,
+0) since they can be mapped to eachother with a bijective function). We can
+define a function that maps these tuples to `the equivalence class
+representative` by picking the equivalent coloring that is sorted first by all
+colorings. Another way of saying this is: we can recolor the coloring so the
+first color we hit is always color `0`, and the seconds color is `1` etc...
+This can be done in linear time and is efficient and well defined. We now know
+if we've seen this isomorphic state before and can stop the searching.
 
 It remains to be shown that this mapping increases the speed of the algorithm.
+But some back of the envelope calculations leads me to believe it should be
+faster by a factor $~1/r$. Since we only search $S(n, r)$ instead of $(r
+\choose n)^{(r - 1)n/r}$ which I believe is a speed up.
+(Need proof here)
+
+That is, we explore all the equivalence classes instead of all possible colorings.
+Since a bijective function does not effect validity of the surrjective coloring.
+(Might need proof here)
+
+The randomized algorithm doesn't have the problem with searching the same area multiple
+times. Mapping the space to it's equivalence classes won't really help there.
+
+Can use same proof for correctness. But we have to show that we indeed visit all equivalence classes.
+
+*proof sketch*
+
+ - The search space from each candidate pair is convex
+ - When `r` grows it's less likely to
+
 
 ```
 DetNRC(H):
+  failedSearches := []
   foreach inital_candidate_pair(c, F) do
-    if DetLocalSearch(H, c, F, (r - 1)n/r) then return 1
+    if DetLocalSearch(H, c, F, (r - 1)n/r, failedSearches) then
+      return 1
+
+    failedSearches.add(ToRepresentativeColor(c))
   return 0
 
-DetLocalSearch(H, c, F, g):
+ToRepresentativeColor(c):
+  mapping := empty
+  q := 0
+  for i in stableNodeOrder(c):
+      if i is not mapped in mapping:
+        mapping(c) := q
+        q := q + 1
+  return the recoloring of c using the mapping
+    
+
+DetLocalSearch(H, c, F, g, failedSearches):
+  c := ToRepresentativeColor(c)
+  foreach o in failedSearches do
+    (Should this be < or <= ? I'm pretty sure this is right)
+    if HammingDistance(c, o) <= (r - 1)n/r then return 0
+
   if g = 0 and induces_raindbow_edge(c, H) then
     return 0
+
   if induces_raindbow_edge(c, H).issubset(F) then
     return 0
+
   if is_no_rainbow_coloring(c, H) then
     return 1
+
   if |e intersect F| != r - 1 forall e in E then
     return 1
+
   e' = pick_any(e where |e intersect F| == r - 1)
   v = pick_any(v in (e' - F))
   foreach j in [r] - {c(v)} do
-    if DetLocalSearch(H, c but c(v) = j, F union {v}, g - 1) then
+    if DetLocalSearch(H, c but c(v) = j, F union {v}, g - 1, failedSearches) then
       return 1
+
   return 0
 ```

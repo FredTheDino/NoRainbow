@@ -9,10 +9,10 @@ def isSolution(r, graph, coloring):
 
 def toSimplestColoring(colorTuple):
     mapping = dict()
-    for (i, c) in enumerate(colorTuple):
+    for c in enumerate(colorTuple):
         if c in mapping:
             continue
-        mapping[c] = i
+        mapping[c] = len(mapping)
     return tuple(mapping[c] for c in colorTuple)
 
 def overviewStateSpace(graph):
