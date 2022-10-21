@@ -1,6 +1,9 @@
 # No Rainbow
 Based on "Exact Algorithms for No-Raindow Coloring and Phylogenetic Decisiveness" by Ghazaleh Parvini and David Ferna´ndez-Baca
 
+Relevant links:
+ - https://en.wikipedia.org/wiki/Stirling_numbers_of_the_second_kind
+
 ## What is "Phylogenetic Decisiveness"?
 Has the special case `r=4` and No-Rainbow is the complement of this problem.
 I have no idea what this is.
@@ -23,6 +26,7 @@ This problem is NP-complete and can be mapped to SAT. (When `r >= 3`)
 
 ### Invariants of the problem, no matter how helpful they are
 $e = \textrm{the number of edges}$,
+$n = \textrm{the number of nodes}$,
 $r = \textrm{the number of colors and nodes per edge}$
  - There has to be at least 1 node of each color
  - There has to be at least $r$ nodes
@@ -169,4 +173,11 @@ DetLocalSearch(H, c, F, g, failedSearches):
       return 1
 
   return 0
-``
+```
+
+# Other ideas releated to No-Rainbow
+  - How many valid colorings are there?
+    - n * num-mappings (this is somehow related to sterling numbers)
+  - What are the odds of stumbling upon one?
+    - If there is any solution, the odds are $>> S(n, r)/r^n$
+  - What would a constraint satisfaction algorithm look like?
