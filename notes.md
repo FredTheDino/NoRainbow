@@ -113,12 +113,14 @@ The randomized algorithm doesn't have the problem with searching the same area m
 times. Mapping the space to it's equivalence classes won't really help there.
 
 Can use same proof for correctness. But we have to show that we indeed visit all equivalence classes.
+ - Note from future me, this is actually not true. We cannot use the same proof
+since the correctness depends on that we search all nodes, if we map to
+equivalence classes how do we know we don't hide anything?
 
-*proof sketch*
-
- - The search space from each candidate pair is convex
- - When `r` grows it's less likely to
-
+## Things I need to prove
+ - The search space from each candidate pair is convex even when mapped to equivalence classes, we don't hide anything when we do the mapping
+ - There is an overlap in the search space, so we are visiting fewer nodes with this "heuristic like thing"
+ - We still visit all equivalence classes
 
 ```
 DetNRC(H):
@@ -130,21 +132,23 @@ DetNRC(H):
     failedSearches.add(ToRepresentativeColor(c))
   return 0
 
+(O(n))
 ToRepresentativeColor(c):
   mapping := empty
   q := 0
   for i in stableNodeOrder(c):
-      if i is not mapped in mapping:
-        mapping(c) := q
+      if c(i) is not mapped in mapping:
+        mapping(c(i)) := q
         q := q + 1
   return the recoloring of c using the mapping
-    
 
 DetLocalSearch(H, c, F, g, failedSearches):
   c := ToRepresentativeColor(c)
-  foreach o in failedSearches do
+  foreach q in failedSearches do
+    (O(n))
     (Should this be < or <= ? I'm pretty sure this is right)
-    if HammingDistance(c, o) <= (r - 1)n/r then return 0
+    if HammingDistance(c, q) <= (r - 1)n/r then
+      return 0
 
   if g = 0 and induces_raindbow_edge(c, H) then
     return 0
@@ -165,4 +169,4 @@ DetLocalSearch(H, c, F, g, failedSearches):
       return 1
 
   return 0
-```
+``
