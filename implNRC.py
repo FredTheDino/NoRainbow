@@ -17,8 +17,34 @@ def candidatePair(graph, r):
             coloring = dict(map(lambda t: (t[1], (t[0] + n) % r), enumerate(list(picked))))
             yield (coloring, frozen)
 
+def toRepresentative(graph, coloring):
+    mapping = dict()
+    out_color = dict()
+    q = 1
+    for n in sorted(nodes(graph)):
+        if getColor(n, coloring) not in mapping:
+            mapping[getColor(n, coloring)] = q
+            q += 1
+        out_color[n] = mapping[getColor(n, coloring)]
+    return out_color
+
+def freezeColoring(coloring):
+    return frozenset(coloring.items())
+
+seenColorings = set()
+searches = set()
+
 def detLocalSearch(r, graph, x, g):
     (coloring, frozen) = x
+
+    coloringP = toRepresentative(graph, coloring)
+    global seenColorings, searches
+    c = freezeColoring(coloringP)
+    # if c in seenColorings:
+    #     return None
+    seenColorings.add(c)
+    searches.add(freezeColoring(coloring))
+
     # There's something I don't understand here?
     rainbowEdges = set(findRainbowEdges(r, graph, coloring))
     if g == 0 and len(rainbowEdges) != 0: return None
@@ -44,10 +70,16 @@ if __name__ == "__main__":
     #         , frozenset(["a", "c", "f"])
     #         , frozenset(["a", "c", "f"])
     #         ])
-    g = completeGraph(4, list(range(6)))
-    stateCounter = 0
-    seen = set()
-    coloring = detNRC(g)
-    # visualizeColoring(g, coloring)
-    print(stateCounter)
+    r = 7
+    k = 11
+    for r in range(6, 8):
+        for k in range(9, 12):
+            seenColorings = set()
+            searches = set()
+            g = completeGraph(r, list(range(k)))
+            seen = set()
+            coloring = detNRC(g)
+            # visualizeColoring(g, coloring)
+            print("r:", r, "k:", k, "normalized:", len(seenColorings), "unique states:", len(searches))
+
 

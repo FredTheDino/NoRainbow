@@ -44,7 +44,7 @@ def visualizeColoring(graph, coloring):
                 print(f"*", end="")
             else:
                 print(f" ", end="")
-        if n in coloring:
+        if coloring and n in coloring:
             print(f" {getColor(n, coloring)}", end="")
         print("")
 
