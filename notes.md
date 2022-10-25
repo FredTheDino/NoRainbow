@@ -123,8 +123,7 @@ equivalence classes how do we know we don't hide anything?
 
 ## Things I need to prove
  - The search space from each candidate pair is convex even when mapped to equivalence classes, we don't hide anything when we do the mapping
- - There is an overlap in the search space, so we are visiting fewer nodes with this "heuristic like thing"
- - We still visit all equivalence classes
+ - There is an overlap in the search space, so we are visiting fewer nodes with these equivalence classes
 
 ```
 DetNRC(H):
