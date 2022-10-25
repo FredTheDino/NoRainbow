@@ -122,8 +122,17 @@ since the correctness depends on that we search all nodes, if we map to
 equivalence classes how do we know we don't hide anything?
 
 ## Things I need to prove
- - The search space from each candidate pair is convex even when mapped to equivalence classes, we don't hide anything when we do the mapping
  - There is an overlap in the search space, so we are visiting fewer nodes with these equivalence classes
+    - Did some samples, in commit `01cbec8`, this shows it's probably true
+```
+r: 6 k: 9 normalized: 126 unique states: 504
+r: 6 k: 10 normalized: 252 unique states: 1260
+r: 6 k: 11 normalized: 462 unique states: 2772
+r: 7 k: 9 normalized: 84 unique states: 252
+r: 7 k: 10 normalized: 210 unique states: 840
+r: 7 k: 11 normalized: 462 unique states: 2310
+```
+ - We visit every equivalence class that could possibly be a solution
 
 ```
 DetNRC(H):
