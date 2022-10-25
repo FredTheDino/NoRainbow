@@ -2,7 +2,9 @@ from random import sample
 from itertools import chain, combinations
 
 def isNoRainbowColoring(r, graph, coloring):
-    return not any(isRainbowEdge(r, edge, coloring) for edge in edges(graph))
+    return all(not isRainbowEdge(r, edge, coloring) for edge in edges(graph)) \
+            and len(set(coloring.values())) == r
+    # The surjective condition is unnecessary, since this is an invariant that is always true for NRC
 
 def isRainbowEdge(r, edge, coloring):
     return len(set(getColor(v, coloring) for v in edge)) == r
