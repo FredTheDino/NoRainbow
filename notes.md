@@ -189,3 +189,130 @@ DetLocalSearch(H, c, F, g, failedSearches):
   - What are the odds of stumbling upon one?
     - If there is any solution, the odds are $>> S(n, r)/r^n$
   - What would a constraint satisfaction algorithm look like?
+
+# The better algoritm (this one is provable)
+  - Filtering out beacons won't work with the frozen set, consider `aaba` and `abaa` edit distance is 2 but we cannot move to them with the fozen set as it is.
+  - To prove:
+    - Prove: All `top_node` has as many nodes in one color as possible (aaaab, aaaba...)
+    - Prove: All `bottom_node` has as many nodes not colored 0 as possible (ababab, abbaab)
+
+    - Prove: All `top_node` has an edit distance of 2 to the closest `top_node` (for cases c != n) (Do I need to prove this?)
+    - Prove: All `bottom_node` has an edit distance of 2 to closest `bottom_node` (for cases c != n) (Do I need to prove this?)
+
+    - ~~NOT CORRECT: A `bottom_node` has an edit distance of `r` to a `top_node` (for cases c != n) (WRONG! Consider r = 3, n = 1000000)~~
+    - Calculate: Shortest edit distance from `bottom_node` to furthest away node. (Trivial $n - r$, better: We need to do $(r - 1)(n/r - 1)$ swaps to get to the category furthest away  )
+
+## Correctness (a bit hand-wavy at the moment)
+We know the algorithm is correct because we visit all categories of equivalence classes since the depth is sufficient.
+We need to re-color $(r - 1)(n/r - 1)$ nodes to get to the category with as even a distribution as possible from the
+category with the least even distribution. ($(1, 1, 1, 7) \rightarrow (2, 2, 2, 2, 3)$).
+
+> **NOTE**: This isn't super clear. The argument rests on that we have to do (r - 1)(n/r - 1)
+> recolorings to end up in e.g. (2, 2, 2, 2, 3) starting in (1, 1, 1, 7). Where (1, 1, 1, 7)
+> is where we actually start, all ways to (n - 1 choose r - 1) and from that generate a coloring.
+> Or put another way, to go from minimum entropy to maximum entropy.
+
+We also know we visit all instances of the equivalence class since the graph is
+fully connected. There cannot exist a coloring which is too far from a start
+node. Since that node would have to exist in the category which is furthest
+from the node, but we know we always reach that category. All nodes also have to
+
+> **NOTE**: Still a bit unclear, but we visit all instances of equivalence
+> classes nodes. Otherwise there would be an equivalence class node that is
+> only reachable from inside one of these classes, which cannot happen. This
+> has to be true.
+
+And since the previous algorithm suggested by `Ghazaleh Parvini and David Ferna´ndez-Baca` is correct, this algorithm should also be correct.
+We still visit all equivalence classes. 
+
+> **NOTE**: We Don't care if we visit all nodes, we only care if we visit all
+> equivalence classes. But since we right now don't have limitations, this has
+> to be correct. But there's a huge speed up to be gained by writing the proof
+> that we don't cut out anything when we only visit images of the equivalence
+> classes.
+
+## Speed
+
+
+## Algorithm
+```
+DetNRC(H):
+  foreach top_node(c, F) do
+    if DetLocalSearch(H, c, F, (r - 1)((n/r) - 1)) then
+      return 1
+  return 0
+
+ToRepresentativeColoring(c):
+  mapping := empty
+  q := 0
+  for i in stableNodeOrder(c):
+      if c(i) is not mapped in mapping then
+        mapping(c(i)) := q
+        q := q + 1
+  return the recoloring of c using the mapping
+
+DetLocalSearch(H, c, F, g):
+  if ToRepresentativeColoring(c) != c then
+    return 0
+
+  if g = 0 and induces_raindbow_edge(c, H) then
+    return 0
+
+  if induces_raindbow_edge(c, H).issubset(F) then
+    return 0
+
+  if is_no_rainbow_coloring(c, H) then
+    return 1
+
+  if |e intersect F| != r - 1 forall e in E then
+    return 1
+
+  e' = pick_any(e where |e intersect F| == r - 1)
+  v = pick_any(v in (e' - F))
+  foreach j in [r] - {c(v)} do
+    (There might be a bigger speed improvement if we filter all neighbors that aren't the image of the equivalence class, we cut off more branches then which is speedy, but I want to make my life easy)
+    if DetLocalSearch(H, c but c(v) = j, F union {v}) then
+      return 1
+
+  return 0
+```
+
+# A potentially even betterone (without proof)
+This algoritm is based on the idea that there are orbits in the equivalence classes for the coloring.
+So if we could find a node in each orbit, we could exhaust each orbit and thus have visited all nodes without overlap.
+For this we need two group actions:
+  - Move inside an orbit
+  - Move between orbits, has to visit all orbits of the first kind
+
+This would be even faster since there's no overlap. But what is the group action?
+
+```
+def find_no_rainbow_coloring(H):
+  start := outer := random_surrjective_coloring(H)
+  do:
+    outer := inner := to_eqv(magic_next_node_in_outer_cycle(outer))
+    do:
+      inner := to_eqv(magic_next_node_in_cycle(inner))
+      if is_no_rainbow_coloring(inner):
+        return inner
+    while outer != inner
+  while curr != start
+  return Failed
+```
+
+# Another potential one
+This algorithm is based on the idea of generating the sets of colorings.
+It might be possible to pick out the sets of each coloring and map them to equivalence classes automatically.
+
+The idea is to continuously pick out set-elements and then back-track to pick out more until all equivalence classes of colorings are found.
+
+Each coloring can be put into a category, based on how many of each color there are, sort this tuple and you have a unique mapping.
+If we can generate all these sorted tuples and then partition the set of nodes into all possible `r`-partition-sets without repeating we would be golden.
+
+A super tiny sketch
+```
+Search(Graph):
+  foreach X := partition_scheem(r, n):
+    if NoRainbowColoring(Partition(X, Nodes(Graph)), Graph):
+      return 1
+```

@@ -38,13 +38,13 @@ def count_neighbors(alpha_size, n):
         degree = len(neighbors)
         minDegree = min(degree, minDegree)
         maxDegree = max(degree, maxDegree)
-    return minDegree, maxDegree
+    return minDegree, maxDegree, seen
 
 # alpha_size = 4
 # n = 5
 
 for alpha_size in range(2, 9):
     for n in range(alpha_size + 1, alpha_size + 4):
-        minDegree, maxDegree = count_neighbors(alpha_size, n)
-        print(f"|alpha|: {alpha_size}, n: {n:3}, <{minDegree:4}, {maxDegree:4}>")
+        minDegree, maxDegree, seen = count_neighbors(alpha_size, n)
+        print(f"|alpha|: {alpha_size}, n: {n:3}, <{minDegree:4}, {maxDegree:4}>, total: {len(seen)}")
 
