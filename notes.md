@@ -190,7 +190,7 @@ DetLocalSearch(H, c, F, g, failedSearches):
     - If there is any solution, the odds are $>> S(n, r)/r^n$
   - What would a constraint satisfaction algorithm look like?
 
-# The better algoritm (this one is provable)
+# The better algoritm (this one is provable - not apparently, it's super finicky! It was easier to change the algoritm. Also it's not faster.)
   - Filtering out beacons won't work with the frozen set, consider `aaba` and `abaa` edit distance is 2 but we cannot move to them with the fozen set as it is.
   - To prove:
     - Prove: All `top_node` has as many nodes in one color as possible (aaaab, aaaba...)
@@ -316,3 +316,92 @@ Search(Graph):
     if NoRainbowColoring(Partition(X, Nodes(Graph)), Graph):
       return 1
 ```
+
+# Another jabb - 2022-10-02
+
+*top-regex*: `top_coloring` is a coloring which follows the regular expressions: `aa*ba*c*d*...`, that is, it starts with an `a`, and has all the other colors placed out with `a`-s in between. The frozen nodes are the first node and all nodes which do not have the color `a`.
+
+*eq-regex*: Note that the `ToRepresentativeColoring` makes everything match: `aa*b[ab]*c[abc]*d[abcd]*...` which is a subset of the starting regex, we know we are in a valid coloring when we start.
+
+> **NOTE**: The DFA for this coloring looks pretty funky. I should draw it.
+
+## Algorithm
+```
+DetNRC(H):
+  foreach top_coloring(c, F) do
+    if DetLocalSearch(H, c, F, n - r) then
+      return 1
+  return 0
+
+(Can this be done faster?) 
+ToRepresentativeColoring(c):
+  mapping := empty
+  q := 0
+  for i in stableNodeOrder(c):
+      if c(i) is not mapped in mapping then
+        mapping(c(i)) := q
+        q := q + 1
+  return the recoloring of c using the mapping
+
+DetLocalSearch(H, c, F, g):
+  -- This is the secret sauce
+  if ToRepresentativeColoring(c) != c then
+    return 0
+
+  if g = 0 and induces_raindbow_edge(c, H) then
+    return 0
+
+  if induces_raindbow_edge(c, H).issubset(F) then
+    return 0
+
+  if is_no_rainbow_coloring(c, H) then
+    return 1
+
+  if |e intersect F| != r - 1 forall e in E then
+    return 1
+
+  e' = pick_any(e where |e intersect F| == r - 1)
+  v = pick_any(v in (e' - F))
+  foreach j in [r] - {c(v)} do
+    if DetLocalSearch(H, c but c(v) = j, F union {v}) then
+      return 1
+
+  return 0
+```
+
+## Correctness (a bit hand-wavy at the moment)
+Some sub points that need proving:
+
+### All equivalence classes of coloring can be reachable from a top coloring
+Given a representative coloring $X$.
+Since $X$ is a representative we know it matches the *eq-regex*.
+We can now write a stricter regex: *a-regex* `a [a]^m1 b [ab]^m2 c [abc]^m3` where $m_i$ is picked to match $X$.
+Note specially that *a-regex* doesn't allow moving of the appearance of a color.
+(Note: I think this step is obvious, but maybe I need to clarify it more?)
+It's now easy to see that:
+  1. *eq-regex* > *a-regex*
+  2. *eq-regex* > *top-regex*
+  3. *top-regex* & *a-regex* != 0 (This is questionable, and there might be a better way to express it)
+
+Since *top-regex* & *a-regex* is non-empty we can pick an element $Y$ from it.
+Since we cannot move the first instance of the colors in anything that is in *a-regex*, we can stay in *a-regex* and still reach $Y$ from $X$ replacing a maximum of $n - r$ colors.
+Thus $X$ is reachable from $Y$ and $Y$ is a top coloring -- thus all colorings in *eq-regex* are reachable from a top coloring.
+
+--------------
+*Intuition*:
+We can think of the *a-regex* as describing a vertical slice through the space of all colorings. And *top-regex* as describing a horizontal slice.
+And this shows that everthing in the vertical slice is connected. And we know that we completely partition the space.
+So now we have reached all of the nodes.
+
+### The depth of $n - r$ is sufficient and
+ - See previous proof
+
+## Speed (A bit hand wavy, sorry)
+Similar arguments to Parvini.
+  - Work per node is polynomial
+  - The number of children per node is harder to define exactly.
+    In the range $(r - 1)$ and $0$ depending on the node we pick.
+    I'm pretty sure there are en equal number of $0$s and $(r-1)$, so maybe I can get away with $(r-1)/2$ or even $r/2$ as an over approximation?
+
+We get closer to, I'm guessing  $O*((\frac{r-1}{2])^{n - r})$. This is however a *substantial* speed improvement.
+
