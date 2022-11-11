@@ -1,1 +1,7 @@
 *.pdf
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.pdf
+*.xml
