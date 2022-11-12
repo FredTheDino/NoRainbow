@@ -1,13 +1,15 @@
-
-all: edvth289_seminar_1.pdf outline.pdf edvth289_extended_thesis_plan_seminar_2.pdf
+all: edvth289_seminar_1.pdf outline.pdf thesis.pdf
 
 %.pdf: %.md
 	pandoc $< -tpdf > $@ 
 
-%.pdf: %.tex %.bib
-	tectonic --keep-intermediates --reruns 0 $<
-	biber $(shell basename -s .tex $<)
-	tectonic $< --outfmt pdf
+%.pdf: %.tex *.tex sources.bib
+	$(shell cpp $< | sed "s/^\#/\%% PRE %%/" > temp.tex)
+	cp sources.bib temp.bib
+	tectonic --keep-intermediates --reruns 0 temp.tex
+	biber temp
+	tectonic temp.tex --outfmt pdf
+	cp temp.pdf $@
 
 clean:
 	rm *.aux

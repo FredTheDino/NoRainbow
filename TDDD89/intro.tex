@@ -1,0 +1,28 @@
+\chapter{Introduction}
+The faster something can be done, the faster technology can iterate.
+A part of this is finding faster algorithms for known hard problems.
+One such hard problem is the no rainbow problem, which is NP-complete\cite{sourceNoRainbow}.
+The no rainbow problems asks if there is a surjective node coloring of an $r$-regular multigraph.
+
+Rephrased, the no rainbow problem asks if we can assign each node a color.
+In a graph with $r$ nodes per edge -- each edge connects $r$ different nodes.
+All $r$ colors should be represented in the entire graph.
+No edge should connect all $r$ colors.
+A node coloring which satisfies these constraints is a solution to the no rainbow problem.
+
+An edge which connects all $r$ colors is called a rainbow edge -- hence the name of the problem.
+The no rainbow problem is a variant of the constraint satisfaction problem.
+
+The no rainbow problem is related to the phylogenetic decisiveness problem. \cite{sourcePhylogeneticDecisiveness}
+
+% TODO: Read https://ieeexplore.ieee.org/document/9616390
+% TODO: https://www.researchgate.net/publication/350673538_Exact_Algorithms_for_No-Rainbow_Coloring_and_Phylogenetic_Decisiveness
+
+\section{Research questions}
+\begin{enumerate}
+  \item Is there a faster deterministic algoritm that solves the no rainbow problem than the one suggested by \cite{sourceNoRainbow}?
+  \item Is there a faster randomized algoritm that solves the no rainbow problem than the one suggested by \cite{sourceNoRainbow}?
+  \item How can a solution to the no rainbow problem be found, understood, modeled and solved?
+  \item What insights are found by studying the no rainbow problem?
+  \item Is it possible that there are even faster algorithms that solve the no rainbow problem?
+\end{enumerate}

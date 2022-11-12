@@ -5,3 +5,5 @@
 *.blg
 *.pdf
 *.xml
+
+temp.*
