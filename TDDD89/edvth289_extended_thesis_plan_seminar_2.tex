@@ -4,6 +4,8 @@
 \usepackage[backend=biber,style=apa]{biblatex}
 \usepackage{mathtools}
 \usepackage{dsfont}
+\usepackage{tikz}
+\usetikzlibrary{topaths,calc}
 
 \addbibresource{edvth289_extended_thesis_plan_seminar_2.bib}
 
@@ -53,12 +55,11 @@ The no rainbow problem is related to the phylogenetic decisiveness problem. \cit
   \item What insights are found by studying the no rainbow problem?
   \item Is it possible that there are even faster algorithms that solve the no rainbow problem?
 \end{enumerate}
-
-\section{Background}
+\chapter{Background}
 The no rainbow problem is quite complex and can be understood in a lot of different ways.
 To understand the problem as broadly as possible a few different areas of discrete mathematics are needed.
 
-\subsection{Equivalence classes and equivalence relations}
+\section{Equivalence classes and equivalence relations}
 Equivalence classes are used to group things that are equal in some sense.
 This requires we have a set of objects and an binary operator we can use to check if they are equal.
 In this general case we use $\sim$ as the operator.
@@ -85,13 +86,135 @@ Here we get 3 equivalence classes $\{[0], [1], [2]\}$. And all integers are mapp
 The representative of a class is the element which has itself as image. In other words, $f(a) = a$ iff $a$ is a representative.
 \cite{sourceArmen} \cite{sourceAATA}
 
-\subsection{Multi Graphs}
+\section{Graphs}
+Graphs consist of a set of edges and a set of nodes.
+Nodes are usually presented as circles with edges connecting the circles as lines.
+Usually an edge is some kind of relationship. 
+A graph is a very powerful and general tool for modeling many problems.
 
-\subsection{Graph colorings}
+An example of a graph:
+\begin{center}
+\begin{tikzpicture}[main/.style = {draw, circle}]
+    \node[main] (A) {};
+    \node[main] (B) [left of=A] {};
+    \node[main] (C) [below of=A] {};
+    \node[main] (D) [left of=C] {};
+    \node[main] (E) [left of=D] {};
+    \node[main] (F) [below of=E] {};
 
-\subsection{Constraint statisfaction and related algoritms}
+    \draw (A) -- (B);
+    \draw (A) -- (C);
+    \draw (B) -- (D);
+    \draw (B) -- (E);
+    \draw (F) -- (E);
+\end{tikzpicture}
+\end{center}
 
-\subsection{NP completeness}
+\cite{sourcedDiestel}
+\cite{sourcedGWA}
+\cite{sourcedArmen}
+
+% Does this add anything?
+
+\section{Hyper Graphs}
+A hyper graph is similar to a normal graph.
+But in a hyper graph edges connect multiple nodes, usually more than 2.
+A hyper edge which is 2-regular is a "normal" graph.
+The "normal" graph can be seen as a special case of the hyper graph.
+
+Another way of phrasing it is that an edge is a set of nodes instead of a pair.
+
+A hyper graph is the kind of graph the no rainbow problem is interesting for.
+
+\begin{center}
+\begin{tikzpicture}[main/.style = {draw, circle}]
+    \node[main] (a) at (0,2) {a};
+    \node[main] (b) at (2,2) {b};
+    \node[main] (c) at (4,2) {c};
+    \node[main] (d) at (0,4) {d};
+    \node[main] (e) at (2,4) {e};
+    \node[main] (f) at (4,4) {f};
+
+    \begin{scope}[fill opacity=0.5]
+    \filldraw[fill=yellow!70] 
+        plot [smooth cycle, tension=1.5]
+        coordinates {
+          ($(a)+(-0.8,0)$) 
+          ($(b)+(0,0.8)$) 
+          ($(c)+(0.8,0)$)
+          ($(b)+(0,-0.8)$) 
+        };
+
+    \filldraw[fill=blue!70] 
+        plot [smooth cycle, tension=0.8]
+        coordinates {
+          ($(c)+(0,-0.8)$) 
+          ($(f)+(0.8,0.8)$) 
+          ($(e)+(-0.4,0.4)$)
+        };
+
+    \filldraw[fill=red!70] 
+        plot [smooth cycle, tension=1.5]
+        coordinates {
+          ($(d)+(-0.8,0)$) 
+          ($(e)+(0,0.8)$) 
+          ($(f)+(0.8,0)$)
+          ($(e)+(0,-0.8)$) 
+        };
+
+    \filldraw[fill=green!70] 
+        plot [smooth cycle, tension=1.0]
+        coordinates {
+          ($(c)+(-0.4,-0.4)$) 
+          ($(c)+(0.4,0.4)$) 
+          ($(e)+(0,0.8)$)
+          ($(a)+(-0.4,0.4)$) 
+          ($(a)+(0.4,-0.4)$) 
+          ($(e)+(0,-0.8)$)
+        };
+
+    \end{scope};
+
+    \node[main] (a) at (0,2) {a};
+    \node[main] (b) at (2,2) {b};
+    \node[main] (c) at (4,2) {c};
+    \node[main] (d) at (0,4) {d};
+    \node[main] (e) at (2,4) {e};
+    \node[main] (f) at (4,4) {f};
+\end{tikzpicture}
+\end{center}
+
+The hyper graph shown above is $3$-regular.
+A hyper graph can be $r$-regular, iff all edges connect $r$-different nodes.
+
+\subsubsection{Node coloring as related by the no rainbow problem}
+A node coloring is a mapping from nodes to colors.
+There are usually constraints on what colors can be part of an edge.
+The color of a node is denoted as $c(a)$, where $a$ is the node and $c$ is the coloring.
+Since a coloring is a mapping it can be thought of as a function that takes you from a node to the color of the node.
+A color is usually a letter or a number.
+
+The constraints added in the no rainbow problem are
+\begin{enumerate}
+  \item No edge can have all r-colors -- no rainbow edges
+  \item All colors have to be represented in the graph -- the coloring is surjective
+\end{enumerate}
+
+An example of a valid coloring in the no rainbow problem for the graph presented above is $c(d)=0, c(b)=1, c(*)=2$, where $*$ denotes all other nodes.
+There are a lot more valid colorings, though this coloring is particularly simple.
+The validity of a coloring is dictated by the edges added in the graph.
+A multi graph with the maximum number of edges (called a complete graph) has no valid no-rainbow coloring.
+A multi graph without any edges is trivial to find a no-rainbow coloring for.
+The cases in between are the main topic of this thesis.
+
+% Is a complete r-regular subgraph enough to disprove there is a no-rainbow coloring? 
+
+% \cite{sourcedDiestel}
+% \cite{sourcedGWA}
+% \cite{sourcedArmen}
+
+
+\section{The existing algorithms}
 
 \printbibliography
 
