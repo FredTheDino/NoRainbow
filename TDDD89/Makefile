@@ -1,5 +1,7 @@
 all: edvth289_seminar_1.pdf outline.pdf thesis.pdf
 
+.PHONY: all thesis
+
 %.pdf: %.md
 	pandoc $< -tpdf > $@ 
 
@@ -16,3 +18,8 @@ clean:
 	rm *.bbl
 	rm *.bcf
 	rm *.pdf
+
+thesis:
+	cp sources.bib liuthesis/edvth289_master_thesis.bib
+	cp *.tex liuthesis/
+	make -C liuthesis
