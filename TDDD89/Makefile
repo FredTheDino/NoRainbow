@@ -1,4 +1,4 @@
-all: edvth289_seminar_1.pdf outline.pdf thesis.pdf
+all: edvth289_seminar_1.pdf outline.pdf thesis.pdf edvth289_seimnar_2.pdf
 
 .PHONY: all thesis
 
@@ -21,5 +21,6 @@ clean:
 
 thesis:
 	cp sources.bib liuthesis/edvth289_master_thesis.bib
+	cp sources.bib liuthesis/references.bib
 	cp *.tex liuthesis/
 	make -C liuthesis
