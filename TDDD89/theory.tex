@@ -1,8 +1,8 @@
-\section{Background}
+\chapter{Background}
 The no rainbow problem is quite complex and can be understood in a lot of different ways.
 To understand the problem as broadly as possible a few different areas of discrete mathematics are needed.
 
-\subsection{Equivalence classes and equivalence relations}
+\section{Equivalence classes and equivalence relations}
 Equivalence classes are used to group things that are equal in some sense.
 This requires we have a set of objects and an binary operator we can use to check if they are equal.
 In this general case we use $\sim$ as the operator.
@@ -29,7 +29,7 @@ Here we get 3 equivalence classes $\{[0], [1], [2]\}$. All integers are mapped i
 The representative of a class is the element which has itself as image. In other words, $f(a) = a \iff a$ is a representative.
 \cite[Section 7.3]{sourceArmen} \cite[Section 1.2]{sourceAATA}
 
-\subsection{Graphs}
+\section{Graphs}
 Graphs consist of a set of edges and a set of nodes.
 Nodes are usually presented as circles with edges connecting the circles as lines, as presented in \ref{figGraphExample}.
 Usually an edge is some kind of relationship. 
@@ -63,7 +63,7 @@ A graph is a very powerful and general tool for modeling many problems.
 
 % Does this add anything?
 
-\subsection{Hyper Graphs}
+\section{Hyper Graphs}
 A hyper graph is similar to a normal graph.
 But in a hyper graph edges connect multiple nodes, usually more than 2.
 A hyper edge which is 2-regular is a "normal" graph.
@@ -142,7 +142,7 @@ The hyper graph shown in figure \ref{figHyperGraphExample} is $3$-regular.
 A hyper graph is $r$-regular if and only if all edges connect $r$-different nodes.
 \cite{sourceHyper}
 
-\subsubsection{Node coloring as related by the no rainbow problem}
+\subsection{Node coloring as related by the no rainbow problem}
 A node coloring is a mapping from nodes to colors.
 There are usually constraints on what colors can be part of an edge.
 The color of a node is denoted as $c(a)$, where $a$ is the node and $c$ is the coloring.
@@ -158,15 +158,15 @@ The constraints added in the no rainbow problem are
 An example of a valid coloring in the no rainbow problem for the graph presented above is $c(d)=0, c(b)=1, c(*)=2$, where $*$ denotes all other nodes.
 There are a lot more valid colorings, though this coloring is particularly simple.
 The validity of a coloring is dictated by the edges added in the graph.
-A multi graph with the maximum number of edges (called a complete graph) has no valid no-rainbow coloring.
-A multi graph without any edges is trivial to find a no-rainbow coloring for.
+A hyper-graph with the maximum number of edges (called a complete graph) has no valid no-rainbow coloring.
+A hyper-graph without any edges is trivial to find a no-rainbow coloring for.
 The cases in between are the main topic of this thesis.
 
 \cite{sourceHyper}
 % Is a complete r-regular subgraph enough to disprove there is a no-rainbow coloring? 
 
-\subsection{The existing algorithms}
+\section{The existing algorithms}
 TBA
 
-\subsection{Algorithm basics}
+\section{Algorithm basics}
 TBA
