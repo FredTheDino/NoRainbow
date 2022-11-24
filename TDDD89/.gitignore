@@ -5,7 +5,11 @@
 *.blg
 *.pdf
 *.xml
+*.lof
+*.toc
 
 temp.*
 
 liuthesis
+figures
+liuthesis.cls
