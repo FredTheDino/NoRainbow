@@ -322,7 +322,7 @@ Two algorithms are presented. One deterministic and one non-deterministic. Both
 algorithms use the idea of searching similar potential solutions for a fixed
 depth, and then trying again. The non-deterministic algorithm samples the
 solution space randomly, while the deterministic algorithm samples a specific
-structure. \cite{sourceNoRainbow}
+structure. The different search patterns are visualized in figure \ref{figNoRainbowSearchPattern}. \cite{sourceNoRainbow}
 
 \begin{center}
 \begin{figure}[h]
@@ -360,9 +360,63 @@ structure. \cite{sourceNoRainbow}
 
 \end{tikzpicture}
   \caption{A visualization of how the deterministic and non-deterministic algorithms tries different colorings. Each black dot is a potential solution. The colored circles show the searched adjacent solutions.}
-  \label{figHyperGraphExample}
+  \label{figNoRainbowSearchPattern}
 \end{figure}
 \end{center}
+
+\section{A Probabilistic Algorithm for k-SAT and Constraint Satisfaction Problems}
+\citeauthor{sourceProbAlgo} proposes a very simple algorithm for solving k-SAT.
+The algorithm is then generalized to all constraint satisfaction problems. The
+algorithm is faster than most of the known algorithms of the time and is
+similar to the algorithm proposed by \citeauthor{sourceNoRainbow} \cite{sourceNoRainbow}.
+
+The k-SAT algorithm randomly flips assignments for variables in constraints which are not satisfied.
+How k-SAT searches is visualized in figure \ref{figKSATSearch}.
+
+\cite{sourceProbAlgo}
+
+\begin{center}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node/.style = {draw, circle}, scale=2]
+  \node[node] (a000) at (0,0) {000};
+
+  \node[node] (a001) at (1,1) {001};
+  \node[node] (a010) at (1,0) {010};
+  \node[node] (a100) at (1,-1) {100};
+
+  \node[node] (a011) at (2,1) {011};
+  \node[node] (a101) at (2,0) {101};
+  \node[node] (a110) at (2,-1) {110};
+  
+  \node[node] (a111) at (3,0) {111};
+
+  \draw (a000) -- (a001);
+  \draw (a000) -- (a010);
+  \draw (a000) -- (a100);
+
+  \draw (a011) -- (a001);
+  \draw (a101) -- (a001);
+
+  \draw (a110) -- (a010);
+  \draw (a011) -- (a010);
+
+  \draw (a110) -- (a100);
+  \draw (a101) -- (a100);
+
+  \draw (a011) -- (a111);
+  \draw (a101) -- (a111);
+  \draw (a110) -- (a111);
+
+  \draw[opacity=0.5, thick, smooth, tension=0.7, green] plot[line width=5mm] coordinates { (a000) (a001) (a101) (a100) (a110) (a010) };
+  \draw[opacity=0.5, thick, smooth, tension=0.7, red  ] plot[line width=5mm] coordinates { (a101) (a111) (a110) (a010) (a011) (a111) };
+
+\end{tikzpicture}
+\caption{A visualization of how the k-SAT algorithm would search for solutions when there are 3 variables. Each node is a potential variable assignment. The lines show how the assignments are searched. The red line is one search and the green line is another search.}
+\label{figKSATSearch}
+\end{figure}
+\end{center}
+
 
 \printbibliography
 
