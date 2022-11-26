@@ -9,7 +9,7 @@
 \usepackage{mathtools}
 \usepackage{dsfont}
 \usepackage{tikz}
-\usetikzlibrary{topaths,calc}
+\usetikzlibrary{topaths,calc,tikzmark}
 \usepackage{algorithm2e}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,6 +32,11 @@
 
 \addbibresource{thesis.bib}
 
+\newcommand\tikznode[3][]%
+   {\tikz[remember picture, baseline=(#2.base)]
+      \node[minimum size=0pt,inner sep=0pt,#1](#2){#3};%
+   }
+
 \author{Edvard Thörnros}
 
 \begin{document}
@@ -53,8 +58,7 @@ No edge should connect all $r$ colors.
 A node coloring that satisfies these constraints is a solution to the no rainbow problem.
 
 An edge that connects all $r$ colors is called a rainbow edge -- hence the name of the problem.
-The no rainbow problem is a variant of the constraint satisfaction problem.
-\cite{sourceNoRainbow}
+The no rainbow problem is a variant of the constraint satisfaction problem. \cite{sourceNoRainbow}
 
 \section{Motivation}
 The no rainbow problem is related to the phylogenetic decisiveness problem. The
@@ -310,7 +314,46 @@ A common error is to claim algorithm \ref{algDivSlow} runs in $O(n)$ -- linear t
 
 Aside from $O$ there is also $O*$. $O*(x^n)$ allows us to discard polynomial factors as well. For example $O*(x^n)$ would allow the algorithm to run in $O(2^nx^n)$.
 
-\section{Computational Classes}
+\section{Constraint Satisfaction Problems}
+Constraint satisfaction problems -- often called CSPs -- is a kind of mathematical problem where a finite set of constraints should be fulfilled. Let us consider some examples of these problems.
+
+One very relevant kind of constraint satisfaction problem is node coloring of hyper graphs.
+Constraints are put on what colors can be put where. In the no rainbow problem all colors should never be part of an edge, but all colors should be present in the graph. What makes this problem tricky is that changes locally (to the nodes in an edge) can affect other parts of the graph -- since a node can be part of multiple edges.
+
+Another well known constraint satisfaction problem is SAT -- which is further discussed in section \ref{secSAT}.
+
+\section{SAT, k-SAT and 3SAT}
+SAT is a very central problem in theoretical computer science. 3SAT is the
+hinge pin on which P versus NP rests -- an efficient algorithm for solving 3SAT
+solves P versus NP.
+
+SAT, k-SAT and 3SAT ask if logical formulas are satisfiable (there is an assignment in which the expression is true).
+The difference between the 3 problems is the input. SAT takes any formula in
+CNF-format (conjunctive normal form) -- all clauses are separated by "and"s and
+in clauses only negation, variables and "or" is allowed.
+
+$$
+  (\tikzmark{v1}a\tikzmark{v2} \vee b \vee c) \tikzmark{w1}\wedge\tikzmark{w2} (\overline{c} \vee d \tikzmark{o1}\vee\tikzmark{o2} e) \wedge \tikzmark{c1}(a \vee \overline{c} \vee e)\tikzmark{c2}
+$$
+\begin{tikzpicture}[overlay, remember picture, main/.style = {}]
+  
+  \node[main, color=blue] (var) at (4,-0.5) {variable};
+  \node[main, color=green] (conj) at (6,-0.5) {conjunction};
+  \node[main, color=red] (clause) at (10,-0.5) {clause};
+  \node[main, color=cyan] (dis) at (8.3,-0.5) {disjunction};
+
+  \draw[-, line width=3mm, opacity=0.5, color=blue] ([yshift=1mm]pic cs:v1) -- ([yshift=1mm]pic cs:v2);
+  \draw[-, line width=3mm, opacity=0.5, color=green] ([yshift=1mm]pic cs:w1) -- ([yshift=1mm]pic cs:w2);
+  \draw[-, line width=3mm, opacity=0.5, color=red] ([yshift=1mm]pic cs:c1) -- ([yshift=1mm]pic cs:c2);
+  \draw[-, line width=3mm, opacity=0.5, color=cyan] ([yshift=1mm]pic cs:o1) -- ([yshift=1mm]pic cs:o2);
+
+  \draw[color=blue] (var) -- (pic cs:v1);
+  \draw[color=green] (conj) -- (pic cs:w1);
+  \draw[color=red] (clause) -- (pic cs:c1);
+  \draw[color=cyan]  (dis) -- (pic cs:o1);
+
+\end{tikzpicture}
+
 
 \chapter{Related Work}
 Exhaustively studies of the no rainbow problem have not been done. There are however a plethora of related problems.
@@ -417,6 +460,12 @@ How k-SAT searches is visualized in figure \ref{figKSATSearch}.
 \end{figure}
 \end{center}
 
+\section{Survey Propagation: an Algorithm for Satisfiability}
+\citeauthor{sourceSurveyProp} suggest an algorithm which generalizes knowledge about parts of solutions of a SAT-problem. 
+When the authors looked at the solution space, they noticed solvers often got stuck in local optimums.
+These local optimums forced some variable assignments and created a form of cluster.
+By surveying these clusters and generalizing the assignments better guesses can be made.
+This algorithm performs incredibly well \cite{sourceSolutionSpace}. \cite{sourceSurveyProp}
 
 \printbibliography
 
