@@ -335,12 +335,13 @@ in clauses only negation, variables and "or" is allowed.
 $$
   (\tikzmark{v1}a\tikzmark{v2} \vee b \vee c) \tikzmark{w1}\wedge\tikzmark{w2} (\overline{c} \vee d \tikzmark{o1}\vee\tikzmark{o2} e) \wedge \tikzmark{c1}(a \vee \overline{c} \vee e)\tikzmark{c2}
 $$
+\begin{figure}[h]
 \begin{tikzpicture}[overlay, remember picture, main/.style = {}]
   
-  \node[main, color=blue] (var) at (4,-0.5) {variable};
-  \node[main, color=green] (conj) at (6,-0.5) {conjunction};
-  \node[main, color=red] (clause) at (10,-0.5) {clause};
-  \node[main, color=cyan] (dis) at (8.3,-0.5) {disjunction};
+  \node[main, color=blue] (var) at (4,0.3) {variable};
+  \node[main, color=green] (conj) at (6,0.3) {conjunction};
+  \node[main, color=red] (clause) at (10,0.3) {clause};
+  \node[main, color=cyan] (dis) at (8.3,0.3) {disjunction};
 
   \draw[-, line width=3mm, opacity=0.5, color=blue] ([yshift=1mm]pic cs:v1) -- ([yshift=1mm]pic cs:v2);
   \draw[-, line width=3mm, opacity=0.5, color=green] ([yshift=1mm]pic cs:w1) -- ([yshift=1mm]pic cs:w2);
@@ -353,6 +354,15 @@ $$
   \draw[color=cyan]  (dis) -- (pic cs:o1);
 
 \end{tikzpicture}
+  \caption{A labeling of a logical expression. An example of input to 3SAT.}
+  \label{figExSAT}
+\end{figure}
+
+
+An example labeling of the  parts of a logical expression is seen in figure
+\ref{figExSAT}. 3SAT requires all clauses to have exactly 3 variables. k-SAT requires all clauses to have exactly k variables. SAT puts not constraints on the causes. But the formula has to be in conjunctive normal form (CNF).
+
+
 
 
 \chapter{Related Work}
