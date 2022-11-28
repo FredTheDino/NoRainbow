@@ -47,12 +47,15 @@
 \chapter{Introduction}
 \label{chaIntro}
 The faster something can be done, the faster technology can iterate.
-A part of this is finding faster algorithms for known hard problems.
+Decreasing the time commitment of something lets that thing be done a lot more often.
+One part of this is finding faster algorithms for known hard problems.
+Solving hard problems faster will help mankind get insight into the problem.
+Insight into hard problems, will also let us tackle even harder problems.
 One such hard problem is the no rainbow problem, which is NP-complete.
-The no rainbow problems asks if there is a surjective node coloring of an $r$-regular hypergraph.
 
+The no rainbow problems asks if there is a surjective node coloring of an $r$-regular hyper graph.
 Rephrased, the no rainbow problem asks if we can assign each node a color.
-In a graph with $r$ nodes per edge -- each edge connects $r$ different nodes.
+In a hyper graph with $r$ nodes per edge -- each edge connects $r$ different nodes.
 All $r$ colors should be represented in the entire graph.
 No edge should connect all $r$ colors.
 A node coloring that satisfies these constraints is a solution to the no rainbow problem.
@@ -64,15 +67,27 @@ The no rainbow problem is a variant of the constraint satisfaction problem. \cit
 The no rainbow problem is related to the phylogenetic decisiveness problem. The
 phylogenetic decisiveness problem asks if a potential ancestral tree for a
 species of animals could possibly be correct, given only parts of the
-information about the ancestry of a species. \cite{sourcePhylogeneticDecisiveness} \cite{sourceNoRainbow}
+information about the ancestry of a species.
+Understanding species will lead to a better understanding of the world. \cite{sourcePhylogeneticDecisiveness} \cite{sourceNoRainbow}
 
-Problems are always worth studying. Understanding a problem and presenting a
-solution can in itself give insights and understanding into harder problems. 
-A well-made algorithm can be used as a building block to solve even harder problems.
+Solving problems is of general importance. Making current solutions faster is also helpful.
+A solution to a problem can be reused in more complex problems. The more
+efficient we can solve the first problem, the more efficient solutions built on
+top of the first problem are. 
+
+There are many pieces of mathematics which are seen as controversial.
+Negative numbers is an excellent example. Negative numbers were highly
+controversial \cite{sourceNeg}. But today we commonly use imaginary numbers -- which is an extension of the negative numbers -- to
+describe currents and rotations. Not all pieces of mathematics have obvious
+applications when they are discovered. Graph theory and computer science are in
+that sense very young field.
+The potential of future uses aside from phylogenetic decisiveness should not elude the reader.
 
 % Honestly, this is grasping at straws.
 The no rainbow problem is a studied NP-hard problem and could give some insight into the P versus NP problem.
 The P versus NP problem is one of the millennium problems -- a solution would have enormous ramifications for our lives.
+Though this algorithm might be simple, this improvement might be used as a
+stepping stone is solving a central problem.
 
 % TODO: Read https://ieeexplore.ieee.org/document/9616390
 % TODO: https://www.researchgate.net/publication/350673538_Exact_Algorithms_for_No-Rainbow_Coloring_and_Phylogenetic_Decisiveness
@@ -89,11 +104,14 @@ The P versus NP problem is one of the millennium problems -- a solution would ha
 
 \section{Aim}
 The aim of this study is to find an asymptotically faster algorithm that solves
-the no rainbow problem. Then present the algorithm and its proof in an accessible way.
+the no rainbow problem. The algorithm should then be presented and evaluated.
+This new algorithm should make it easier to solve the phylogenetic decisiveness
+problem and any other potential problem which can be mapped to it.
 
 \section{Delimitations}
 This study will focus on the theoretical no rainbow problem.
-Implementing the algorithms is not part of this study.
+Implementing the algorithms or doing practical performance evaluations is not part of this study.
+This article is purely theoretical.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Background
