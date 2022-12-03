@@ -53,7 +53,7 @@ Solving hard problems faster will help mankind get insight into the problem.
 Insight into hard problems, will also let us tackle even harder problems.
 One such hard problem is the no rainbow problem, which is NP-complete.
 
-The no rainbow problems asks if there is a surjective node coloring of an $r$-regular hyper graph.
+The no rainbow problems \cite{sourceNoRainbow} asks if there is a surjective node coloring of an $r$-regular hyper graph.
 Rephrased, the no rainbow problem asks if we can assign each node a color.
 In a hyper graph with $r$ nodes per edge -- each edge connects $r$ different nodes.
 All $r$ colors should be represented in the entire graph.
@@ -61,33 +61,33 @@ No edge should connect all $r$ colors.
 A node coloring that satisfies these constraints is a solution to the no rainbow problem.
 
 An edge that connects all $r$ colors is called a rainbow edge -- hence the name of the problem.
-The no rainbow problem is a variant of the constraint satisfaction problem. \cite{sourceNoRainbow}
+The no rainbow problem is a variant of the constraint satisfaction problem. 
 
 \section{Motivation}
-The no rainbow problem is related to the phylogenetic decisiveness problem. The
+The no rainbow problem is related to the phylogenetic decisiveness problem \cite{sourceNoRainbow}\cite{sourcePhylogeneticDecisiveness}. The
 phylogenetic decisiveness problem asks if a potential ancestral tree for a
 species of animals could possibly be correct, given only parts of the
 information about the ancestry of a species.
-Understanding species will lead to a better understanding of the world. \cite{sourcePhylogeneticDecisiveness} \cite{sourceNoRainbow}
+Understanding species will lead to a better understanding of the world.  
 
 Solving problems is of general importance. Making current solutions faster is also helpful.
 A solution to a problem can be reused in more complex problems. The more
 efficient we can solve the first problem, the more efficient solutions built on
 top of the first problem are. 
 
-There are many pieces of mathematics which are seen as controversial.
+There are many pieces of mathematics that are seen as controversial but later find applications.
 Negative numbers is an excellent example. Negative numbers were highly
-controversial \cite{sourceNeg}. But today we commonly use imaginary numbers -- which is an extension of the negative numbers -- to
+controversial \cite{sourceNeg}. But today we commonly use imaginary numbers -- that is an extension of the negative numbers -- to
 describe currents and rotations. Not all pieces of mathematics have obvious
 applications when they are discovered. Graph theory and computer science are in
-that sense very young field.
+that sense very young fields.
 The potential of future uses aside from phylogenetic decisiveness should not elude the reader.
 
 % Honestly, this is grasping at straws.
 The no rainbow problem is a studied NP-hard problem and could give some insight into the P versus NP problem.
 The P versus NP problem is one of the millennium problems -- a solution would have enormous ramifications for our lives.
 Though this algorithm might be simple, this improvement might be used as a
-stepping stone is solving a central problem.
+stepping stone in solving a central problem.
 
 % TODO: Read https://ieeexplore.ieee.org/document/9616390
 % TODO: https://www.researchgate.net/publication/350673538_Exact_Algorithms_for_No-Rainbow_Coloring_and_Phylogenetic_Decisiveness
@@ -106,7 +106,7 @@ stepping stone is solving a central problem.
 The aim of this study is to find an asymptotically faster algorithm that solves
 the no rainbow problem. The algorithm should then be presented and evaluated.
 This new algorithm should make it easier to solve the phylogenetic decisiveness
-problem and any other potential problem which can be mapped to it.
+problem and any other potential problem that can be mapped to it.
 
 \section{Delimitations}
 This study will focus on the theoretical no rainbow problem.
@@ -184,7 +184,7 @@ A graph is a very powerful and general tool for modeling many problems.
 
 \section{Hyper Graphs}
 A hyper graph is similar to a normal graph.
-But in a hyper graph edges connect multiple nodes, usually more than 2.
+All edges in a hyper graph connect multiple nodes, usually more than 2.
 A hyper edge that is 2-regular is a "normal" graph.
 The "normal" graph can be seen as a special case of the hyper graph.
 
@@ -338,14 +338,14 @@ Constraint satisfaction problems -- often called CSPs -- is a kind of mathematic
 One very relevant kind of constraint satisfaction problem is node coloring of hyper graphs.
 Constraints are put on what colors can be put where. In the no rainbow problem all colors should never be part of an edge, but all colors should be present in the graph. What makes this problem tricky is that changes locally (to the nodes in an edge) can affect other parts of the graph -- since a node can be part of multiple edges.
 
-Another well known constraint satisfaction problem is SAT -- which is further discussed in section \ref{secSAT}.
+Another well known constraint satisfaction problem is SAT -- that is further discussed in section \ref{secSAT}.
 
 \section{SAT, k-SAT and 3SAT}
 SAT is a very central problem in theoretical computer science. 3SAT is the
-hinge pin on which P versus NP rests -- an efficient algorithm for solving 3SAT
+hinge pin on that P versus NP rests -- an efficient algorithm for solving 3SAT
 solves P versus NP.
 
-SAT, k-SAT and 3SAT ask if logical formulas are satisfiable (there is an assignment in which the expression is true).
+SAT, k-SAT and 3SAT ask if logical formulas are satisfiable (there is an assignment in that the expression is true).
 The difference between the 3 problems is the input. SAT takes any formula in
 CNF-format (conjunctive normal form) -- all clauses are separated by "and"s and
 in clauses only negation, variables and "or" is allowed.
@@ -384,16 +384,17 @@ An example labeling of the  parts of a logical expression is seen in figure
 
 
 \chapter{Related Work}
-Exhaustively studies of the no rainbow problem have not been done. There are however a plethora of related problems.
+Exhaustive studies of the no rainbow problem have not been done. There are however a plethora of related problems.
 These related problems are more broadly studied.
 
 \section{Exact Algorithms for No-Rainbow Coloring and Phylogenetic Decisiveness}
-"Exact Algorithms for No-Rainbow Coloring and Phylogenetic Decisiveness" are currently the fastest algorithms.
+"Exact Algorithms for No-Rainbow Coloring and Phylogenetic Decisiveness" \cite{sourceNoRainbow}
+are currently the fastest algorithms.
 Two algorithms are presented. One deterministic and one non-deterministic. Both
 algorithms use the idea of searching similar potential solutions for a fixed
 depth, and then trying again. The non-deterministic algorithm samples the
 solution space randomly, while the deterministic algorithm samples a specific
-structure. The different search patterns are visualized in figure \ref{figNoRainbowSearchPattern}. \cite{sourceNoRainbow}
+structure. The different search patterns are visualized in figure \ref{figNoRainbowSearchPattern}. 
 
 \begin{center}
 \begin{figure}[h]
@@ -441,7 +442,7 @@ The algorithm is then generalized to all constraint satisfaction problems. The
 algorithm is faster than most of the known algorithms of the time and is
 similar to the algorithm proposed by \citeauthor{sourceNoRainbow} \cite{sourceNoRainbow}.
 
-The k-SAT algorithm randomly flips assignments for variables in constraints which are not satisfied.
+The k-SAT algorithm randomly flips assignments for variables in constraints that are not satisfied.
 How k-SAT searches is visualized in figure \ref{figKSATSearch}.
 
 \cite{sourceProbAlgo}
@@ -489,16 +490,25 @@ How k-SAT searches is visualized in figure \ref{figKSATSearch}.
 \end{center}
 
 \section{Survey Propagation: an Algorithm for Satisfiability}
-\citeauthor{sourceSurveyProp} suggest an algorithm which generalizes knowledge about parts of solutions of a SAT-problem. 
+\citeauthor{sourceSurveyProp} \cite{sourceSurveyProp} suggest an algorithm that generalizes knowledge about parts of solutions of a SAT-problem. 
 When the authors looked at the solution space, they noticed solvers often got stuck in local optimums.
 These local optimums forced some variable assignments and created a form of cluster.
 By surveying these clusters and generalizing the assignments better guesses can be made.
-This algorithm performs incredibly well \cite{sourceSolutionSpace}. \cite{sourceSurveyProp}
+
+
+
+The run time performance of implementations of survey propagation performs incredibly well.
+\blockquote{No other algorithm practically solves formulas of such density with $n=10^4$.}
+\cite{sourceSolutionSpace}
 
 \printbibliography
 
 \appendix
 \chapter{Changes after feedback seminar (2022-11-25)}
 Removed 2 research questions. Added motivation. Added aim. Added delimitations. Fixed typos of multi graph and hyper graph. Corrected typo in title. Moved background to its own chapter. Took feedback from Don and replaced "which" with "that".
+
+\chapter{Changes after seminar 3 (2022-12-01)}
+Reworded some sentences and fixed some typos. Changed source to adhere to the IEEE standard.
+
 
 \end{document}
