@@ -11,6 +11,7 @@
 \usepackage{tikz}
 \usetikzlibrary{topaths,calc,tikzmark}
 \usepackage{algorithm2e}
+\usepackage{pgfgantt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Settings
@@ -496,10 +497,136 @@ These local optimums forced some variable assignments and created a form of clus
 By surveying these clusters and generalizing the assignments better guesses can be made.
 
 
-
 The run time performance of implementations of survey propagation performs incredibly well.
 \blockquote{No other algorithm practically solves formulas of such density with $n=10^4$.}
 \cite{sourceSolutionSpace}
+
+% TODO: One more related research article
+
+\chapter{Time Plan}
+A plan of how to structure the writing of the final thesis. A GANTT-chart is presented and used as the center of the discussion.
+
+\section{GANTT-chart}
+
+\begin{center}
+\begin{figure}[h]
+\begin{ganttchart}[
+    vgrid,
+    bar left shift=0.15,
+    bar right shift=-0.15,
+    bar/.append style={rounded corners=3pt},
+    bar inline label node/.style={%
+      anchor=south, font=\ganttvalueof{bar label font}%
+    },%
+    inline,
+    milestone inline label node/.style={%
+      anchor=north, font=\ganttvalueof{milestone label font}%
+    },%
+    expand chart=\textwidth
+]{1}{20}
+\gantttitle{Project Plan}{20} \\
+\gantttitlelist{1,...,20}{1} \\
+
+\ganttgroup{Problem}{1}{13} \\
+\ganttbar{Discover solutions}{1}{9}
+\ganttlinkedbar{Present solution}{10}{13} \\
+\ganttmilestone{Show to examiner}{4} \\
+\ganttmilestone{Solution OK by examiner}{9} \\
+\\
+\ganttgroup{Report}{1}{20} \\
+\ganttbar{Related works}{2}{8} \\
+\ganttbar{Discussion}{14}{16} \\
+\ganttbar{Conclusion}{17}{17} \\
+\ganttbar{Introduction}{18}{18} \\
+
+\ganttbar{Polish report}{19}{20}
+\ganttlink{elem2}{elem7}
+\ganttlink{elem7}{elem8}
+\ganttlink{elem6}{elem7}
+\ganttlink{elem8}{elem9}
+\ganttlink{elem9}{elem10}
+\end{ganttchart}
+  \caption{The project plan for the final thesis.}
+  \label{figGanttChart}
+\end{figure}
+\end{center}
+
+\subsection{Polish report}
+In the report group, each task corresponds to a chapter except "Polish report".
+The "Polish report" chapter is for fixing everything else that needs fixing.
+The vague heading "Polish report" will also serve as slack for the project.
+
+\subsection{Related works}
+Reading of background and related material. This activity results in a finished background/related works section.
+The background and related works should preferably be too long here to be trimmed shorter later.
+
+\subsection{Discussion}
+The discussion is written here.
+
+\subsection{Conclusion}
+The conclusion is written here.
+
+\subsection{Introduction}
+The Introduction is written here.
+
+\subsection{Discover solutions}
+The heading "Discover solutions" also needs some clarification. Constructing
+an algorithm is a creative process. For a creative process it is instrumental
+to move between working and thinking. Related works section is scheduled for
+parts of the duration of discovering solutions. Since knowing more about the
+area will feed back into new ideas for other algorithmic solutions. 
+
+\begin{center}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[thick, node/.style = {draw}]
+  \node[node] (a) at (0,0) {Brainstorm solutions};
+  \node[node] (b) at (0,3) {Shoot down ideas};
+  \node[node] (c) at (5,1.5) {Read external sources};
+
+  \draw[->] (a) to[out=30,in=-30] node[right]{Suggestions} (b);
+  \draw[->] (b) to[out=-150,in=150] node[left]{Experience} (a);
+  \draw[->] (c) to[out=-90,in=0] node[right]{Ideas for proofs} (a);
+  \draw[->] (c) to[out=90,in=0] node[right]{Ideas for algorithms} (b);
+\end{tikzpicture}
+\caption{The creative process of constructing algorithms according to me.}
+\label{figCreativeProcess}
+\end{figure}
+\end{center}
+
+\subsection{Present solution}
+Extra work is put into presenting the solution as well as possible.
+This means polishing the proof to make it as clear and well written as possible.
+Here the bulk of the report is written. The proofs and the explanations are put into place.
+
+\subsection{Milestones "Show to examiner" and "Solution OK by examiner"}
+These milestones will give me deadline.
+These deadlines shape the creative process of discovering algorithms from losing focus.
+I will know if these milestones are reached if my examiner thinks the work is looking acceptable.
+
+\subsection{Risks}
+
+\begin{enumerate}
+  \item (likelihood: *medium, severity: high)
+    The largest risk for failure in the plan. If no sufficiently good algorithm
+    is found the project will have to be restructured. Either a different problem
+    will have to be chosen (preferably in a related area), or the thesis will have
+    to pivot to motivate why there is not a faster algorithm. This risk is
+    impossible to estimate and will require a lot of work to adapt to.
+
+  \item (likelihood: low, severity: medium)
+    The examiner might not know enough about the subject area to give valid
+    guidance. This might prolong the project and force me to redo work. I will
+    have to be critical of the feedback from my examiner and make sure I have a
+    solid understanding.
+
+  \item (likelihood: medium, severity: low)
+    There might not be enough background surrounding the No Rainbow problem.
+    This will force me to branch out more in my research but should still allow
+    me to formulate a good thesis. The project might take more time if there
+    are few sources. To mitigate this I should read a wide variety of articles.
+\end{enumerate}
+
 
 \printbibliography
 
@@ -509,6 +636,5 @@ Removed 2 research questions. Added motivation. Added aim. Added delimitations. 
 
 \chapter{Changes after seminar 3 (2022-12-01)}
 Reworded some sentences and fixed some typos. Changed source to adhere to the IEEE standard.
-
 
 \end{document}
