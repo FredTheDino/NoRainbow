@@ -23,7 +23,7 @@
 \supervisor{Peter Jonson}
 \examiner{???}
 \titleenglish{A Faster Algorithm for Solving the No-Rainbow Problem}
-\subtitleenglish{100\% rainbow-free guarantee}
+% \subtitleenglish{100\% rainbow-free guarantee}
 \titleswedish{En snabbare algoritm för No Rainbow problemet}
 \thesissubject{Datavetenskap}
 
@@ -120,32 +120,32 @@ This article is theoretical.
 The no rainbow problem is quite complex and can be understood in a lot of different ways.
 To understand the problem as broadly as possible a few different areas of discrete mathematics are needed.
 
-\section{Equivalence classes and equivalence relations}
-Equivalence classes are used to group things that are equal in some sense.
-This requires we have a set of objects and an binary operator we can use to check if they are equal.
-In this general case we use $\sim$ as the operator.
-
-$$
-  a \sim b \implies \textit{$a$ is related to $b$ under the equivalence relation ($\sim$)}
-$$
-
-A common way of defining equivalence relations is to map the objects to their image and then use equality.
-More generally we can define it using:
-$$
-  a \sim b \iff f(a) = f(b)
-$$
-Where $f(a)$ is the image of $a$.
-
-For example:
-$$
-  a \sim b \iff (a \bmod 3) = (b \bmod 3) : \quad a, b \in \mathds{Z}
-$$
-
-Here we send each object to their image -- that is their remained after division by 3 -- and then compare them.
-Here we get 3 equivalence classes $\{[0], [1], [2]\}$. All integers are mapped into exactly one of these 3 equivalence class.
-
-The representative of a class is the element that has itself as image. In other words, $f(a) = a \iff a$ is a representative.
-\cite[Section 7.3]{sourceArmen} \cite[Section 1.2]{sourceAATA}
+% \section{Equivalence classes and equivalence relations}
+% Equivalence classes are used to group things that are equal in some sense.
+% This requires we have a set of objects and an binary operator we can use to check if they are equal.
+% In this general case we use $\sim$ as the operator.
+% 
+% $$
+%   a \sim b \implies \textit{$a$ is related to $b$ under the equivalence relation ($\sim$)}
+% $$
+% 
+% A common way of defining equivalence relations is to map the objects to their image and then use equality.
+% More generally we can define it using:
+% $$
+%   a \sim b \iff f(a) = f(b)
+% $$
+% Where $f(a)$ is the image of $a$.
+% 
+% For example:
+% $$
+%   a \sim b \iff (a \bmod 3) = (b \bmod 3) : \quad a, b \in \mathds{Z}
+% $$
+% 
+% Here we send each object to their image -- that is their remained after division by 3 -- and then compare them.
+% Here we get 3 equivalence classes $\{[0], [1], [2]\}$. All integers are mapped into exactly one of these 3 equivalence class.
+% 
+% The representative of a class is the element that has itself as image. In other words, $f(a) = a \iff a$ is a representative.
+% \cite[Section 7.3]{sourceArmen} \cite[Section 1.2]{sourceAATA}
 
 \section{Graphs}
 Graphs consist of a set of edges and a set of nodes
@@ -287,7 +287,8 @@ Sometimes called asymptotic time complexity is a theoretical basis for evaluatin
 The asymptotic computational complexity of an algorithm shows how the run time
 of the implemented algorithm scales given infinitely large inputs.
 
-There are multiple kinds of asymptotic computational complexity. The most used
+
+There are multiple kinds of asymptotic computational complexity \cite[Chapter 3]{sourceAlgoBook}. The most used
 one -- and the one presented in this paper -- is the "big-O" notation. "Big-O"
 gives the highest upper bound of this theoretical runtime -- or the worst-case
 computational complexity. Examples usually make things clearer, so let us look at an algorithm.
@@ -323,12 +324,11 @@ thus $O(b) = O(2^n)$.
 There are other ways to reason to this conclusion.
 One other way is to realize we have to visit all numbers between $0$ and $b$.
 In binary this means visiting all possible combinations of 0s and 1s that are needed to describe $b$.
-We have 2 choices for $n$ bits. All combinations have to be visited. So we visit $O(2^n)$ numbers in the worst case.
-\cite[Chapter 3]{sourceAlgoBook}
+We have 2 choices for $n$ bits. All combinations have to be visited. So we visit $O(2^n)$ numbers in the worst case. 
 
 A common error is to claim Algorithm \ref{algDivSlow} runs in $O(n)$ -- linear time. This is incorrect.
 
-Aside from $O$ there is also $O*$. $O*(x^n)$ allows us to discard polynomial factors as well. For example $O*(x^n)$ would allow the algorithm to run in $O(2^nx^n)$.
+Aside from $O$ there is also $O^*$. $O^*(x^n)$ allows us to discard polynomial factors as well. For example $O^*(x^n)$ would allow the algorithm to run in $O(P(x)x^n)$ where $P(x)$ is some polynomial.
 
 \section{Constraint Satisfaction Problems}
 Constraint satisfaction problems -- often called CSPs -- is a kind of mathematical problem where a finite set of constraints should be fulfilled. Let us consider some examples of these problems.
@@ -684,5 +684,20 @@ Removed 2 research questions. Added motivation. Added aim. Added delimitations. 
 
 \chapter{Changes after seminar 3 (2022-12-01)}
 Reworded some sentences and fixed some typos. Changed source to adhere to the IEEE standard.
+
+\chapter{Changes after seminar 5 (2022-12-16)}
+
+\begin{itemize}
+  \item Algorithm is spelled correctly in the title
+  \item Slim down on graph references
+  \item Method citations made clearer
+  \item Method is clearified and expanded
+  \item Introduction is streamlined
+  \item CSP missing reference is fixed. 
+  \item Related works is expanded to make relation to this thesis clearer
+  \item Add deadlines from IDA
+  \item Minor style language fixes
+  \item Section on equivalence classes was removed since it is now unreferenced
+\end{itemize}
 
 \end{document}
