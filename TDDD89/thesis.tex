@@ -63,7 +63,7 @@ An edge that connects all $r$ colors is called a rainbow edge -- hence the name 
 The no rainbow problem is a constraint satisfaction problem and is NP-complete.
 
 \section{Motivation}
-The no rainbow problem is related to the phylogenetic decisiveness problem \cite{sourceNoRainbow}\cite{sourcePhylogeneticDecisiveness}. The
+The no rainbow problem is related to the phylogenetic decisiveness problem \cite{sourceNoRainbow, sourcePhylogeneticDecisiveness}. The
 phylogenetic decisiveness problem asks if a potential ancestral tree for a
 species of animals could possibly be correct, given only parts of the
 information about the ancestry of a species.
@@ -74,7 +74,7 @@ A solution to a problem can be reused in more complex problems. The more
 efficient we can solve the first problem, the more efficient solutions built on
 top of the first problem are. 
 
-There are many pieces of mathematics that are seen as controversial but later find applications.
+Some pieces of mathematics are seen as controversial at first until an application is found.
 Negative numbers is an excellent example. Negative numbers were highly
 controversial \cite{sourceNeg}. But today we commonly use imaginary numbers -- that is an extension of the negative numbers -- to
 describe currents and rotations. Not all pieces of mathematics have obvious
@@ -184,8 +184,8 @@ A graph is a very powerful and general tool for modeling many problems.
 \section{Hyper Graphs}
 A hyper graph is similar to a normal graph.
 All edges in a hyper graph connect multiple nodes, usually more than 2.
-A hyper edge that is 2-regular is a "normal" graph.
-The "normal" graph can be seen as a special case of the hyper graph.
+A hyper edge that is 2-regular is a ``normal`` graph.
+The ``normal`` graph can be seen as a special case of the hyper graph.
 Another way of phrasing it is that an edge is a set of nodes instead of a pair.
 
 A hyper graph is the kind of graph the no rainbow problem.
@@ -259,7 +259,7 @@ The hyper graph shown in Figure \ref{figHyperGraphExample} is $3$-regular.
 A hyper graph is $r$-regular if and only if all edges connect $r$-different nodes.
 \cite{sourceHyper}
 
-\subsection{Node coloring as related by the no rainbow problem}
+\section{Node coloring as related by the no rainbow problem}
 A node coloring is a mapping from nodes to colors.
 There are usually constraints on what colors can be part of an edge.
 The color of a node is denoted as $c(a)$, where $a$ is the node and $c$ is the coloring.
@@ -289,13 +289,13 @@ of the implemented algorithm scales given infinitely large inputs.
 
 
 There are multiple kinds of asymptotic computational complexity \cite[Chapter 3]{sourceAlgoBook}. The most used
-one -- and the one presented in this paper -- is the "big-O" notation. "Big-O"
+one -- and the one presented in this paper -- is the ``big-O`` notation. ``Big-O``
 gives the highest upper bound of this theoretical runtime -- or the worst-case
 computational complexity. Examples usually make things clearer, so let us look at an algorithm.
-One intuition for the computational complexity is to "count the number of steps".
+One intuition for the computational complexity is to ``count the number of steps``.
 
 \begin{algorithm}
-\caption{A slow exponentiation algorithm}\label{algDivSlow}
+\caption{A slow exponentiation algorithm.}\label{algDivSlow}
 \KwData{$a,b \in \mathds{Z}, \quad b \le 0$}
 \KwResult{$a^b$}
 \DontPrintSemicolon
@@ -314,7 +314,7 @@ One intuition for the computational complexity is to "count the number of steps"
 
 We assume multiplication can be done in constant time -- it always takes at most $K$ units of time to do a multiplication.
 The Algorithm \ref{algDivSlow} will perform $ 2 + Kb $ steps, where $K$ is some
-constant. We can rewrite this using "Big-O" notation as $O(1 + Kb)$. The expression can be
+constant. We can rewrite this using ``Big-O`` notation as $O(1 + Kb)$. The expression can be
 simplified to remove constants that become insignificant if the
 input is sufficiently large. Then we get $O(2 + Kb) = O(b)$, since both $1$ and $K$ are constants. 
 Normally the asymptotic time complexity is defined based on the size of the input not the magnitude of the value.
@@ -388,7 +388,7 @@ into these related works. In particular there is a review of the currently
 fastest algorithms.
 
 \section{Exact Algorithms for No-Rainbow Coloring and Phylogenetic Decisiveness}
-"Exact Algorithms for No-Rainbow Coloring and Phylogenetic Decisiveness" \cite{sourceNoRainbow}
+``Exact Algorithms for No-Rainbow Coloring and Phylogenetic Decisiveness`` \cite{sourceNoRainbow}
 are currently the fastest algorithms.
 Two algorithms are presented. One deterministic and one non-deterministic. Both
 algorithms use the idea of searching similar potential solutions for a fixed
@@ -512,7 +512,7 @@ They even have such strong claims as:
 The run time speed of survey propagation is then discussed throughout the paper.
 Informal claims for the run time performance are made with a basis of mathematical reasoning.
 Further, reasoning of how solutions to constraint satisfaction problems and SAT cluster are made.
-Concepts like "frozen variables" are introduced - variables which only have one
+Concepts like ``frozen variables`` are introduced - variables which only have one
 possible value given the current configuration, a sort of deadlock.
 
 There is no method section in this paper.
@@ -524,7 +524,7 @@ An outline of the project plan is presented and the method to be used is discuss
 The methodology of mathematics is not a well published subject \cite{sourceMethodMath}.
 There is currently an internal debate in algorithms research \cite{sourceUllman}, debating the value of measuring implementations of algorithms.
 Some benefits of theoretical analysis is the rigor of mathematics and the solid foundations it offers, but these are also theoretical constructs which might not map to reality \cite{sourceAlgorithmEngineeering}.
-There are also heuristic solutions to problems which in practice perform better than algorithms with guarantees \cite{sourceSolutionSpace}\cite{sourceSurveyProp}.
+There are also heuristic solutions to problems which in practice perform better than algorithms with guarantees \cite{sourceSolutionSpace,sourceSurveyProp}.
 
 The method most used in the papers is rigorous mathematical proofs. There might be value in coupling mathematics with run time evaluations of program implementations.
 Small test implementations of the algorithms might also easily filter out obviously bad ideas given a sufficient amount of test cases.
@@ -589,9 +589,9 @@ A GANTT-chart of the work is presented in Figure \ref{figGanttChart}.
 \end{center}
 
 \subsection{Polish report}
-In the report group, each task corresponds to a chapter except "Polish report".
-The "Polish report" chapter is for fixing everything else that needs fixing.
-The vague heading "Polish report" will also serve as slack for the project.
+In the report group, each task corresponds to a chapter except ``Polish report``.
+The ``Polish report`` chapter is for fixing everything else that needs fixing.
+The vague heading ``Polish report`` will also serve as slack for the project.
 
 \subsection{Related works}
 Reading of background and related material. This activity results in a finished background/related works section.
@@ -607,11 +607,12 @@ The conclusion is written here.
 The Introduction is written here.
 
 \subsection{Discover solutions}
-The heading "Discover solutions" also needs some clarification. Constructing
+The heading ``Discover solutions`` also needs some clarification. Constructing
 an algorithm is a creative process. For a creative process it is instrumental
 to move between working and thinking. Related works section is scheduled for
 parts of the duration of discovering solutions. Since knowing more about the
 area will feed back into new ideas for other algorithmic solutions. 
+Figure \ref{figCreativeProcess} contains a visualization of the flow.
 
 \begin{center}
 \begin{figure}[h]
@@ -636,20 +637,20 @@ Extra work is put into presenting the solution as well as possible.
 This means polishing the proof to make the proofs as clear and well written as possible.
 Here the bulk of the report is written. The proofs and the explanations are put into place.
 
-\subsection{Milestones "Show to examiner" and "Solution OK by examiner"}
+\subsection{Milestones ``Show to examiner`` and ``Solution OK by examiner``}
 These milestones will give me deadline.
 These deadlines stop the creative process of discovering algorithms from losing focus.
 I will know if these milestones are reached if my examiner thinks the work is looking acceptable.
 These correspond to halftime reviews.
 
-\subsection{Milestone "Find opponent"}
+\subsection{Milestone ``Find opponent``}
 Will find someone to oppose me, and preferably someone to oppose. 
 
-\subsection{Milestone "1st hand in"}
+\subsection{Milestone ``1st hand in``}
 A first version of the thesis is handed in, in a state that I would be happy to
 publish. But expecting further revisions.
 
-\subsection{Milestone "Hold presentation and final hand in"}
+\subsection{Milestone ``Hold presentation and final hand in``}
 The final presentation is held. I get feedback from my examiner and my
 opponent. This feedback is the quickly revised then the thesis can be sent for
 publishing.
@@ -680,7 +681,7 @@ publishing.
 
 \appendix
 \chapter{Changes after feedback seminar (2022-11-25)}
-Removed 2 research questions. Added motivation. Added aim. Added delimitations. Fixed typos of multi graph and hyper graph. Corrected typo in title. Moved background to its own chapter. Took feedback from Don and replaced "which" with "that".
+Removed 2 research questions. Added motivation. Added aim. Added delimitations. Fixed typos of multi graph and hyper graph. Corrected typo in title. Moved background to its own chapter. Took feedback from Don and replaced ``which`` with ``that``.
 
 \chapter{Changes after seminar 3 (2022-12-01)}
 Reworded some sentences and fixed some typos. Changed source to adhere to the IEEE standard.
@@ -698,6 +699,8 @@ Reworded some sentences and fixed some typos. Changed source to adhere to the IE
   \item Add deadlines from IDA
   \item Minor style language fixes
   \item Section on equivalence classes was removed since it is now unreferenced
+  \item Added references to unreferenced figure
+  \item Minor style touch ups
 \end{itemize}
 
 \end{document}
