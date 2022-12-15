@@ -22,7 +22,7 @@
 
 \supervisor{Peter Jonson}
 \examiner{???}
-\titleenglish{A Faster Algoritm for Solving the No-Rainbow Problem}
+\titleenglish{A Faster Algorithm for Solving the No-Rainbow Problem}
 \subtitleenglish{100\% rainbow-free guarantee}
 \titleswedish{En snabbare algoritm för No Rainbow problemet}
 \thesissubject{Datavetenskap}
@@ -47,14 +47,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}
 \label{chaIntro}
-The faster something can be done, the faster technology can iterate.
 Decreasing the time commitment of something lets that thing be done a lot more often.
 One part of this is finding faster algorithms for known hard problems.
-Solving hard problems faster will help mankind get insight into the problem.
 Insight into hard problems, will also let us tackle even harder problems.
-One such hard problem is the no rainbow problem, which is NP-complete.
+One such hard problem is the no rainbow problem.
 
-The no rainbow problems \cite{sourceNoRainbow} asks if there is a surjective node coloring of an $r$-regular hyper graph.
+The no rainbow problem \cite{sourceNoRainbow} asks if there is a surjective node coloring of an $r$-regular hyper graph.
 Rephrased, the no rainbow problem asks if we can assign each node a color.
 In a hyper graph with $r$ nodes per edge -- each edge connects $r$ different nodes.
 All $r$ colors should be represented in the entire graph.
@@ -62,7 +60,7 @@ No edge should connect all $r$ colors.
 A node coloring that satisfies these constraints is a solution to the no rainbow problem.
 
 An edge that connects all $r$ colors is called a rainbow edge -- hence the name of the problem.
-The no rainbow problem is a variant of the constraint satisfaction problem. 
+The no rainbow problem is a constraint satisfaction problem and is NP-complete.
 
 \section{Motivation}
 The no rainbow problem is related to the phylogenetic decisiveness problem \cite{sourceNoRainbow}\cite{sourcePhylogeneticDecisiveness}. The
@@ -111,8 +109,8 @@ problem and any other potential problem that can be mapped to it.
 
 \section{Delimitations}
 This study will focus on the theoretical no rainbow problem.
-Implementing the algorithms or doing practical performance evaluations is not part of this study.
-This article is purely theoretical.
+Implementing the algorithms is not part of this study.
+This article is theoretical.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Background
@@ -150,8 +148,12 @@ The representative of a class is the element that has itself as image. In other 
 \cite[Section 7.3]{sourceArmen} \cite[Section 1.2]{sourceAATA}
 
 \section{Graphs}
-Graphs consist of a set of edges and a set of nodes.
-Nodes are usually presented as circles with edges connecting the circles as lines, as presented in \ref{figGraphExample}.
+Graphs consist of a set of edges and a set of nodes
+% \cite[Chapter 1]{sourceDiestel}
+% \cite[Chapter 1]{sourceGWA}
+\cite[Section 9.1]{sourceArmen}.
+
+Nodes are usually presented as circles with edges connecting the circles as lines, as presented in Figure \ref{figGraphExample}.
 Usually an edge is some kind of relationship. 
 A graph is a very powerful and general tool for modeling many problems.
 
@@ -177,10 +179,6 @@ A graph is a very powerful and general tool for modeling many problems.
 \end{figure}
 \end{center}
 
-\cite[Chapter 1]{sourceDiestel}
-\cite[Chapter 1]{sourceGWA}
-\cite[Section 9.1]{sourceArmen}
-
 % Does this add anything?
 
 \section{Hyper Graphs}
@@ -188,10 +186,9 @@ A hyper graph is similar to a normal graph.
 All edges in a hyper graph connect multiple nodes, usually more than 2.
 A hyper edge that is 2-regular is a "normal" graph.
 The "normal" graph can be seen as a special case of the hyper graph.
-
 Another way of phrasing it is that an edge is a set of nodes instead of a pair.
 
-A hyper graph is the kind of graph the no rainbow problem is interesting for.
+A hyper graph is the kind of graph the no rainbow problem.
 
 \begin{center}
 \begin{figure}[h]
@@ -258,7 +255,7 @@ A hyper graph is the kind of graph the no rainbow problem is interesting for.
 
 % Show the other way of rendering them
 
-The hyper graph shown in figure \ref{figHyperGraphExample} is $3$-regular.
+The hyper graph shown in Figure \ref{figHyperGraphExample} is $3$-regular.
 A hyper graph is $r$-regular if and only if all edges connect $r$-different nodes.
 \cite{sourceHyper}
 
@@ -315,7 +312,7 @@ One intuition for the computational complexity is to "count the number of steps"
 \end{algorithm}
 
 We assume multiplication can be done in constant time -- it always takes at most $K$ units of time to do a multiplication.
-The algorithm \ref{algDivSlow} will perform $ 2 + Kb $ steps, where $K$ is some
+The Algorithm \ref{algDivSlow} will perform $ 2 + Kb $ steps, where $K$ is some
 constant. We can rewrite this using "Big-O" notation as $O(1 + Kb)$. The expression can be
 simplified to remove constants that become insignificant if the
 input is sufficiently large. Then we get $O(2 + Kb) = O(b)$, since both $1$ and $K$ are constants. 
@@ -329,7 +326,7 @@ In binary this means visiting all possible combinations of 0s and 1s that are ne
 We have 2 choices for $n$ bits. All combinations have to be visited. So we visit $O(2^n)$ numbers in the worst case.
 \cite[Chapter 3]{sourceAlgoBook}
 
-A common error is to claim algorithm \ref{algDivSlow} runs in $O(n)$ -- linear time. This is incorrect.
+A common error is to claim Algorithm \ref{algDivSlow} runs in $O(n)$ -- linear time. This is incorrect.
 
 Aside from $O$ there is also $O*$. $O*(x^n)$ allows us to discard polynomial factors as well. For example $O*(x^n)$ would allow the algorithm to run in $O(2^nx^n)$.
 
@@ -339,17 +336,17 @@ Constraint satisfaction problems -- often called CSPs -- is a kind of mathematic
 One very relevant kind of constraint satisfaction problem is node coloring of hyper graphs.
 Constraints are put on what colors can be put where. In the no rainbow problem all colors should never be part of an edge, but all colors should be present in the graph. What makes this problem tricky is that changes locally (to the nodes in an edge) can affect other parts of the graph -- since a node can be part of multiple edges.
 
-Another well known constraint satisfaction problem is SAT -- that is further discussed in section \ref{secSAT}.
+Another well known constraint satisfaction problem is SAT -- that is further discussed in Section \ref{secSAT}.
 
-\section{SAT, k-SAT and 3SAT}
+\section{SAT, k-SAT and 3SAT}\label{secSAT}
 SAT is a very central problem in theoretical computer science. 3SAT is the
 hinge pin on that P versus NP rests -- an efficient algorithm for solving 3SAT
 solves P versus NP.
 
 SAT, k-SAT and 3SAT ask if logical formulas are satisfiable (there is an assignment in that the expression is true).
 The difference between the 3 problems is the input. SAT takes any formula in
-CNF-format (conjunctive normal form) -- all clauses are separated by "and"s and
-in clauses only negation, variables and "or" is allowed.
+CNF-format (conjunctive normal form) -- all clauses are separated by conjunctions and
+in clauses only negation, variables and disjunction are allowed.
 
 $$
   (\tikzmark{v1}a\tikzmark{v2} \vee b \vee c) \tikzmark{w1}\wedge\tikzmark{w2} (\overline{c} \vee d \tikzmark{o1}\vee\tikzmark{o2} e) \wedge \tikzmark{c1}(a \vee \overline{c} \vee e)\tikzmark{c2}
@@ -378,7 +375,7 @@ $$
 \end{figure}
 
 
-An example labeling of the  parts of a logical expression is seen in figure
+An example labeling of the  parts of a logical expression is seen in Figure
 \ref{figExSAT}. 3SAT requires all clauses to have exactly 3 variables. k-SAT requires all clauses to have exactly k variables. SAT puts not constraints on the causes. But the formula has to be in conjunctive normal form (CNF).
 
 
@@ -386,7 +383,9 @@ An example labeling of the  parts of a logical expression is seen in figure
 
 \chapter{Related Work}
 Exhaustive studies of the no rainbow problem have not been done. There are however a plethora of related problems.
-These related problems are more broadly studied.
+These related problems are more broadly studied. This section gives insight
+into these related works. In particular there is a review of the currently
+fastest algorithms.
 
 \section{Exact Algorithms for No-Rainbow Coloring and Phylogenetic Decisiveness}
 "Exact Algorithms for No-Rainbow Coloring and Phylogenetic Decisiveness" \cite{sourceNoRainbow}
@@ -395,7 +394,11 @@ Two algorithms are presented. One deterministic and one non-deterministic. Both
 algorithms use the idea of searching similar potential solutions for a fixed
 depth, and then trying again. The non-deterministic algorithm samples the
 solution space randomly, while the deterministic algorithm samples a specific
-structure. The different search patterns are visualized in figure \ref{figNoRainbowSearchPattern}. 
+structure. The different search patterns are visualized in Figure \ref{figNoRainbowSearchPattern}. 
+
+The paper by \citeauthor{sourceNoRainbow} \cite{sourceNoRainbow} is a great starting point for finding a faster algorithm.
+Adapting the algorithm to lean more into hyper graphs might give valuable insights into the problem to speed it up.
+In the paper the mathematics and proofs are described. There is no method section in this paper.
 
 \begin{center}
 \begin{figure}[h]
@@ -438,15 +441,15 @@ structure. The different search patterns are visualized in figure \ref{figNoRain
 \end{center}
 
 \section{A Probabilistic Algorithm for k-SAT and Constraint Satisfaction Problems}
-\citeauthor{sourceProbAlgo} proposes a very simple algorithm for solving k-SAT.
+\citeauthor{sourceProbAlgo} \cite{sourceProbAlgo} propose a very simple algorithm for solving k-SAT.
 The algorithm is then generalized to all constraint satisfaction problems. The
 algorithm is faster than most of the known algorithms of the time and is
 similar to the algorithm proposed by \citeauthor{sourceNoRainbow} \cite{sourceNoRainbow}.
 
-The k-SAT algorithm randomly flips assignments for variables in constraints that are not satisfied.
-How k-SAT searches is visualized in figure \ref{figKSATSearch}.
+In the paper there is no method section. The algorithm is simply presented and proven very well. 
 
-\cite{sourceProbAlgo}
+The k-SAT algorithm randomly flips assignments for variables in constraints that are not satisfied.
+How k-SAT searches is visualized in Figure \ref{figKSATSearch}.
 
 \begin{center}
 \begin{figure}[h]
@@ -495,24 +498,45 @@ How k-SAT searches is visualized in figure \ref{figKSATSearch}.
 When the authors looked at the solution space, they noticed solvers often got stuck in local optimums.
 These local optimums forced some variable assignments and created a form of cluster.
 By surveying these clusters and generalizing the assignments better guesses can be made.
+After iterating a good solution can be found by little effort.
+Survey Propagation has no guarantees on convergence, but performs really well in practice.
 
+There is no method chapter, only arguments and thoughts about the algorithm.
 
-The run time performance of implementations of survey propagation performs incredibly well.
+\section{On the Solution-Space Geometry of Random Constraint Satisfaction Problems}
+The run time performance of an implementation of survey propagation is mentioned to perform incredibly well.
+They even have such strong claims as:
 \blockquote{No other algorithm practically solves formulas of such density with $n=10^4$.}
 \cite{sourceSolutionSpace}
 
-% TODO: One more related research article
+The run time speed of survey propagation is then discussed throughout the paper.
+Informal claims for the run time performance are made with a basis of mathematical reasoning.
+Further, reasoning of how solutions to constraint satisfaction problems and SAT cluster are made.
+Concepts like "frozen variables" are introduced - variables which only have one
+possible value given the current configuration, a sort of deadlock.
+
+There is no method section in this paper.
 
 \chapter{Project Plan}
-The methodology of mathematics is not a well published subject. My methodology
-consists of relating new areas of mathematics to the No Rainbow problem.
-By relating new ideas to the no rainbow problem I hope to find new insights and an asymptotically faster algorithm.
+An outline of the project plan is presented and the method to be used is discussed.
 
-\cite{sourceMethodMath}
-\cite{sourceAlgorithmEngineeering}
-\cite{sourceUllman}
+\section{Method}
+The methodology of mathematics is not a well published subject \cite{sourceMethodMath}.
+There is currently an internal debate in algorithms research \cite{sourceUllman}, debating the value of measuring implementations of algorithms.
+Some benefits of theoretical analysis is the rigor of mathematics and the solid foundations it offers, but these are also theoretical constructs which might not map to reality \cite{sourceAlgorithmEngineeering}.
+There are also heuristic solutions to problems which in practice perform better than algorithms with guarantees \cite{sourceSolutionSpace}\cite{sourceSurveyProp}.
+
+The method most used in the papers is rigorous mathematical proofs. There might be value in coupling mathematics with run time evaluations of program implementations.
+Small test implementations of the algorithms might also easily filter out obviously bad ideas given a sufficient amount of test cases.
+Further, the methods in previous papers all center on mathematical arguments and problem-solving.
+
+A good method would be a creative process of problem-solving and formulating the findings as mathematical proofs.
+Since this method is what all other papers in this area are using.
+There might be modifications that can be made to more suite a thesis in engineering,
+but I am hesitant to try a novel methodology.
 
 \section{GANTT-chart}
+A GANTT-chart of the work is presented in Figure \ref{figGanttChart}.
 
 \begin{center}
 \begin{figure}[h]
@@ -536,17 +560,24 @@ By relating new ideas to the no rainbow problem I hope to find new insights and 
 \ganttgroup{Problem}{1}{13} \\
 \ganttbar{Discover solutions}{1}{9}
 \ganttlinkedbar{Present solution}{10}{13} \\
-\ganttmilestone{Show to examiner}{4} \\
-\ganttmilestone{Solution OK by examiner}{9} \\
+\ganttmilestone{Show to examiner}{4}
+\ganttmilestone[milestone inline label node/.style={anchor=south}]{Solution OK by examiner}{9} \\
 \\
-\ganttgroup{Report}{1}{20} \\
+\ganttgroup{Report}{1}{19} \\
 \ganttbar{Related works}{2}{8} \\
-\ganttbar{Discussion}{14}{16} \\
-\ganttbar{Conclusion}{17}{17} \\
-\ganttbar{Introduction}{18}{18} \\
+\ganttbar{Discussion}{11}{13} \\
+\ganttbar{Conclusion}{14}{14} \\
+\ganttbar{Introduction}{15}{15} \\
 
-\ganttbar{Polish report}{19}{20}
-\ganttlink{elem2}{elem7}
+\ganttbar{Polish report}{16}{17} \\
+\ganttlinkedbar{Presentation}{18}{20} \\
+
+\ganttmilestone{Find opponent}{16} \\
+\ganttmilestone{1st hand in}{17} \\
+
+\ganttmilestone[milestone inline label node/.style={anchor=north east}]{Hold presentation and final hand in}{20} \\
+
+\ganttlink{elem1}{elem7}
 \ganttlink{elem7}{elem8}
 \ganttlink{elem6}{elem7}
 \ganttlink{elem8}{elem9}
@@ -595,7 +626,7 @@ area will feed back into new ideas for other algorithmic solutions.
   \draw[->] (c) to[out=-90,in=0] node[right]{Ideas for proofs} (a);
   \draw[->] (c) to[out=90,in=0] node[right]{Ideas for algorithms} (b);
 \end{tikzpicture}
-\caption{The creative process of constructing algorithms according to me.}
+\caption{The creative process of constructing algorithms according to the author.}
 \label{figCreativeProcess}
 \end{figure}
 \end{center}
@@ -607,18 +638,30 @@ Here the bulk of the report is written. The proofs and the explanations are put 
 
 \subsection{Milestones "Show to examiner" and "Solution OK by examiner"}
 These milestones will give me deadline.
-These deadlines shape the creative process of discovering algorithms from losing focus.
+These deadlines stop the creative process of discovering algorithms from losing focus.
 I will know if these milestones are reached if my examiner thinks the work is looking acceptable.
+These correspond to halftime reviews.
+
+\subsection{Milestone "Find opponent"}
+Will find someone to oppose me, and preferably someone to oppose. 
+
+\subsection{Milestone "1st hand in"}
+A first version of the thesis is handed in, in a state that I would be happy to
+publish. But expecting further revisions.
+
+\subsection{Milestone "Hold presentation and final hand in"}
+The final presentation is held. I get feedback from my examiner and my
+opponent. This feedback is the quickly revised then the thesis can be sent for
+publishing.
 
 \subsection{Risks}
 
 \begin{enumerate}
-  \item (likelihood: *medium, severity: high)
+  \item (likelihood: medium, severity: high)
     The largest risk for failure in the plan. If no sufficiently good algorithm
     is found the project will have to be restructured. Either a different problem
     will have to be chosen (preferably in a related area), or the thesis will have
-    to pivot to motivate why there is not a faster algorithm. This risk is
-    impossible to estimate and will require a lot of work to adapt to.
+    to pivot to motivate why there is not a faster algorithm.
 
   \item (likelihood: low, severity: medium)
     The examiner might not know enough about the subject area to give valid
@@ -632,7 +675,6 @@ I will know if these milestones are reached if my examiner thinks the work is lo
     me to formulate a good thesis. The project might take more time if there
     are few sources. To mitigate this I should read a wide variety of articles.
 \end{enumerate}
-
 
 \printbibliography
 
