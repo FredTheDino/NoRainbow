@@ -24,7 +24,7 @@
 \examiner{???}
 \titleenglish{A Faster Algorithm for Solving the No-Rainbow Problem}
 % \subtitleenglish{100\% rainbow-free guarantee}
-\titleswedish{En snabbare algoritm för No Rainbow problemet}
+\titleswedish{En snabbare algoritm för No-Rainbow problemet}
 \thesissubject{Datavetenskap}
 
 \publicationyear{2023}
@@ -50,20 +50,20 @@
 Decreasing the time commitment of something lets that thing be done a lot more often.
 One part of this is finding faster algorithms for known hard problems.
 Insight into hard problems, will also let us tackle even harder problems.
-One such hard problem is the no rainbow problem.
+One such hard problem is the no-rainbow problem.
 
-The no rainbow problem \cite{sourceNoRainbow} asks if there is a surjective node coloring of an $r$-regular hyper graph.
-Rephrased, the no rainbow problem asks if we can assign each node a color.
+The no-rainbow problem \cite{sourceNoRainbow} asks if there is a surjective node coloring of an $r$-regular hyper graph.
+Rephrased, the no-rainbow problem asks if we can assign each node a color.
 In a hyper graph with $r$ nodes per edge -- each edge connects $r$ different nodes.
 All $r$ colors should be represented in the entire graph.
 No edge should connect all $r$ colors.
-A node coloring that satisfies these constraints is a solution to the no rainbow problem.
+A node coloring that satisfies these constraints is a solution to the no-rainbow problem.
 
 An edge that connects all $r$ colors is called a rainbow edge -- hence the name of the problem.
-The no rainbow problem is a constraint satisfaction problem and is NP-complete.
+The no-rainbow problem is a constraint satisfaction problem and is NP-complete.
 
 \section{Motivation}
-The no rainbow problem is related to the phylogenetic decisiveness problem \cite{sourceNoRainbow, sourcePhylogeneticDecisiveness}. The
+The no-rainbow problem is related to the phylogenetic decisiveness problem \cite{sourceNoRainbow, sourcePhylogeneticDecisiveness}. The
 phylogenetic decisiveness problem asks if a potential ancestral tree for a
 species of animals could possibly be correct, given only parts of the
 information about the ancestry of a species.
@@ -76,14 +76,14 @@ top of the first problem are.
 
 Some pieces of mathematics are seen as controversial at first until an application is found.
 Negative numbers is an excellent example. Negative numbers were highly
-controversial \cite{sourceNeg}. But today we commonly use imaginary numbers -- that is an extension of the negative numbers -- to
+controversial \cite{sourceNeg}. But today we commonly use imaginary numbers -- an extension of the negative numbers -- to
 describe currents and rotations. Not all pieces of mathematics have obvious
 applications when they are discovered. Graph theory and computer science are in
 that sense very young fields.
 The potential of future uses aside from phylogenetic decisiveness should not elude the reader.
 
 % Honestly, this is grasping at straws.
-The no rainbow problem is a studied NP-hard problem and could give some insight into the P versus NP problem.
+The no-rainbow problem is a studied NP-hard problem and could give some insight into the P versus NP problem.
 The P versus NP problem is one of the millennium problems -- a solution would have enormous ramifications for our lives.
 Though this algorithm might be simple, this improvement might be used as a
 stepping stone in solving a central problem.
@@ -93,22 +93,22 @@ stepping stone in solving a central problem.
 
 \section{Research questions}
 \begin{enumerate}
-  \item Is there a faster* deterministic algorithm that solves the no rainbow problem than the one suggested by Ghazaleh Parvini and David Fernandez-Baca \cite{sourceNoRainbow}?
-  \item Is there a faster* randomized algorithm that solves the no rainbow problem than the one suggested by Ghazaleh Parvini and David Fernandez-Baca \cite{sourceNoRainbow}?
-  % \item How can a solution to the no rainbow problem be found, understood, modeled and presented?
-  % \item What insights into algorithms are found by studying the no rainbow problem?
-  \item How fast* is the fastest* possible algorithm for solving the no rainbow problem? 
+  \item Is there a faster* deterministic algorithm that solves the no-rainbow problem than the one suggested by Ghazaleh Parvini and David Fernandez-Baca \cite{sourceNoRainbow}?
+  \item Is there a faster* randomized algorithm that solves the no-rainbow problem than the one suggested by Ghazaleh Parvini and David Fernandez-Baca \cite{sourceNoRainbow}?
+  % \item How can a solution to the no-rainbow problem be found, understood, modeled and presented?
+  % \item What insights into algorithms are found by studying the no-rainbow problem?
+  \item How fast* is the fastest* possible algorithm for solving the no-rainbow problem? 
 \end{enumerate}
 *Speed is defined by asymptotic computational complexity.
 
 \section{Aim}
 The aim of this study is to find an asymptotically faster algorithm that solves
-the no rainbow problem. The algorithm should then be presented and evaluated.
+the no-rainbow problem. The algorithm should then be presented and evaluated.
 This new algorithm should make it easier to solve the phylogenetic decisiveness
 problem and any other potential problem that can be mapped to it.
 
 \section{Delimitations}
-This study will focus on the theoretical no rainbow problem.
+This study will focus on the theoretical no-rainbow problem.
 Implementing the algorithms is not part of this study.
 This article is theoretical.
 
@@ -117,7 +117,7 @@ This article is theoretical.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Background}
 \label{chaBackground}
-The no rainbow problem is quite complex and can be understood in a lot of different ways.
+The no-rainbow problem is quite complex and can be understood in a lot of different ways.
 To understand the problem as broadly as possible a few different areas of discrete mathematics are needed.
 
 % \section{Equivalence classes and equivalence relations}
@@ -188,7 +188,7 @@ A hyper edge that is 2-regular is a ``normal`` graph.
 The ``normal`` graph can be seen as a special case of the hyper graph.
 Another way of phrasing it is that an edge is a set of nodes instead of a pair.
 
-A hyper graph is the kind of graph the no rainbow problem.
+A hyper graph is the kind of graph the no-rainbow problem.
 
 \begin{center}
 \begin{figure}[h]
@@ -259,20 +259,20 @@ The hyper graph shown in Figure \ref{figHyperGraphExample} is $3$-regular.
 A hyper graph is $r$-regular if and only if all edges connect $r$-different nodes.
 \cite{sourceHyper}
 
-\section{Node coloring as related by the no rainbow problem}
+\section{Node coloring as related by the no-rainbow problem}
 A node coloring is a mapping from nodes to colors.
 There are usually constraints on what colors can be part of an edge.
 The color of a node is denoted as $c(a)$, where $a$ is the node and $c$ is the coloring.
 Since a coloring is a mapping it can be thought of as a function that takes you from a node to the color of the node.
 A color is usually a letter or a number.
 
-The constraints added in the no rainbow problem are
+The constraints added in the no-rainbow problem are
 \begin{enumerate}
-  \item No edge can have all r-colors -- no rainbow edges
+  \item No edge can have all r-colors -- no-rainbow edges
   \item All colors have to be represented in the graph -- the coloring is surjective
 \end{enumerate}
 
-An example of a valid coloring in the no rainbow problem for the graph presented above is $c(d)=0, c(b)=1, c(*)=2$, where $*$ denotes all other nodes.
+An example of a valid coloring in the no-rainbow problem for the graph presented above is $c(d)=0, c(b)=1, c(*)=2$, where $*$ denotes all other nodes.
 There are a lot more valid colorings, though this coloring is particularly simple.
 The validity of a coloring is dictated by the edges added in the graph.
 A hyper-graph with the maximum number of edges (called a complete graph) has no valid no-rainbow coloring.
@@ -334,7 +334,7 @@ Aside from $O$ there is also $O^*$. $O^*(x^n)$ allows us to discard polynomial f
 Constraint satisfaction problems -- often called CSPs -- is a kind of mathematical problem where a finite set of constraints should be fulfilled. Let us consider some examples of these problems.
 
 One very relevant kind of constraint satisfaction problem is node coloring of hyper graphs.
-Constraints are put on what colors can be put where. In the no rainbow problem all colors should never be part of an edge, but all colors should be present in the graph. What makes this problem tricky is that changes locally (to the nodes in an edge) can affect other parts of the graph -- since a node can be part of multiple edges.
+Constraints are put on what colors can be put where. In the no-rainbow problem all colors should never be part of an edge, but all colors should be present in the graph. What makes this problem tricky is that changes locally (to the nodes in an edge) can affect other parts of the graph -- since a node can be part of multiple edges.
 
 Another well known constraint satisfaction problem is SAT -- that is further discussed in Section \ref{secSAT}.
 
@@ -382,7 +382,7 @@ An example labeling of the  parts of a logical expression is seen in Figure
 
 
 \chapter{Related Work}
-Exhaustive studies of the no rainbow problem have not been done. There are however a plethora of related problems.
+Exhaustive studies of the no-rainbow problem have not been done. There are however a plethora of related problems.
 These related problems are more broadly studied. This section gives insight
 into these related works. In particular there is a review of the currently
 fastest algorithms.
@@ -671,7 +671,7 @@ publishing.
     solid understanding.
 
   \item (likelihood: medium, severity: low)
-    There might not be enough background surrounding the No Rainbow problem.
+    There might not be enough background surrounding the no-rainbow problem.
     This will force me to branch out more in my research but should still allow
     me to formulate a good thesis. The project might take more time if there
     are few sources. To mitigate this I should read a wide variety of articles.
