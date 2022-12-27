@@ -1,0 +1,101 @@
+\documentclass{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Imports
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[backend=biber,sorting=none,hyperref]{biblatex}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{tikz}
+\usetikzlibrary{topaths,calc,tikzmark}
+\usepackage{algorithm2e}
+
+
+\begin{document}
+
+\section{The new algorithm}
+The currently fastest algorithm is pretty good.
+It's well thought out and quite efficient.
+But the algorithm searches a lot of redundant space.
+Some colorings have to have the same validity as others and search them as many times as there are duplicates ($r!$) is a waste.
+The key insight is that we can end some searches earlier if we know we eventually reach a coloring with equivalent validity.
+
+
+There are some different kinds of colorings that I've decided to group in a very specific way.
+We always start at the nodes that match the \textit{top-regex}, I call these \textit{top-coloring}.
+
+Consider that we use the colors $a, b, c, d \dots$. We order them alphabetically which gives us an ordering of the coloring.
+The \textit{top-regex} requires all colors and exactly one of each color in ``rising`` order with the first colors spread between them.
+All colors also have to be present, so we only allow surjective colorings.
+\\
+\textit{top-regex}: $aa*ba*ca*\dots$ \hspace{1em} \textit{e.g.}: $abc$, $abaca$, $aabaacaa$
+\\
+There are also equivalence classes, where colorings which have to be valid at the same time are mapped to.
+Consider the colorings $abc$ and $cba$. No matter the edge configuration of the hyper graph, these two colorings have to share validity.
+This is because we can rename each color to get the other color -- colorings only care about the internal equality of colors.
+We can then send all of these to their representative by renaming the colors. We start from the left and rename all colors, calling
+the first color we see $a$, the second $b$ and so on. We can also describe a regex that matches this.
+\\
+\textit{eq-regex}: $a[a]*b[ab]*c[abc]*\dots$ \hspace{1em} \textit{e.g.}: $abc$, $ababacaa$, $aabaccab$
+\\
+Note specially that if \textit{top-regex} matches, then \textit{eq-regex} also matches. All top-nodes are eq-nodes, \textit{top-reqeg} implies \texxtbf{eq-regex}.
+\textit{eq-regex} matching is a requirement for \textit{top-regex} to match.
+
+\begin{verbatim}
+DetNRC(H):
+  foreach top_coloring(c, F) do
+    if DetLocalSearch(H, c, F, n - r) then
+      return YES
+  return NO
+
+isRepresentativeColoring(c):
+  mapping := empty
+  q := 0
+  for i in stableNodeOrder(c):
+      if c(i) is not mapped in mapping then
+        mapping(c(i)) := q
+        q := q + 1
+  return true if mapping describes the same coloring as c
+
+DetLocalSearch(H, c, F, g):
+  -- This is the secret sauce
+  if not isRepresentativeColoring(c) then return NO
+
+  if g = 0 and induces_raindbow_edge(c, H) then return NO
+
+  if induces_raindbow_edge(c, H).issubset(F) then return NO
+
+  if is_no_rainbow_coloring(c, H) then return YES
+
+  if |e intersect F| != r - 1 forall e in E then return YES
+
+  e' = pick_any(e where |e intersect F| == r - 1)
+  v = pick_any(v in (e' - F))
+  foreach j in [r] - {c(v)} do
+    if DetLocalSearch(H, c but c(v) = j, F union {v}) then return YES
+
+  return NO
+\end{verbatim}
+
+\subsection{Some intuition} 
+
+\pagebreak
+
+\section{Proofs}
+
+\subsection{All equivalence classes are within the edit distance of $n - r$ from their corresponding \textit{top-node}}
+Pick a random surjective coloring $X$. We can now send it to it's representative by renaming the colors, calling the new color $X'$.
+We know $X'$ matches the \textbf{eq-regex}, since it is surjective and a representation.
+
+If we now change all but the first appearance of each color to the $a$-color, we have something that matches a \textit{top-node}.
+This means the edit distance from any surjective coloring to its corresponding \textit{top-node} is at most $n - r$.
+
+\subsubsection{Some clarification and an example}
+Since the first appearance of a color in the coloring tuple has to be the same -- we can at most replace all other colors.
+Consider $aabbcc$, the \textit{top-node} corresponds to $aabaca$.
+
+\subsection{All equivalence classes are within the edit distance of $n - r$}
+
+\end{document}
