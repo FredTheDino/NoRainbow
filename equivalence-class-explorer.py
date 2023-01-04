@@ -1,6 +1,7 @@
 from itertools import product 
 from collections import defaultdict
 from string import (ascii_lowercase)
+import sys
 
 
 def one_change(a, b):
@@ -16,8 +17,8 @@ try:
     n, alpha_size = map(int, input().split())
     alpha = list(ascii_lowercase)[:alpha_size]
 except:
-    n = 3
-    alpha = ["a", "b", "c"]
+    n = 5
+    alpha = ["a", "b", "c", "d"]
 
 def to_eqv(a):
     global alpha
@@ -37,6 +38,9 @@ for a in product(alpha, repeat=n):
     a = to_eqv(a)
     if is_surr(a) and a not in adj:
         adj[a] = set(to_eqv(p) for p in product(alpha, repeat=len(a)) if one_change(a, p) and is_surr(p))
+
+print(adj)
+sys.exit(0)
 
 # print("strict graph {")
 # print("    rankdir=LR")
