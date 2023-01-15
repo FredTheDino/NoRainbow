@@ -17,6 +17,15 @@
 \usepackage{forest}
 \usetikzlibrary{er}
 
+\usepackage{amsthm}
+
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
 \pagestyle{empty}
 
 \title{A Faster Algorithm for the No-Rainbow Problem}
@@ -52,27 +61,46 @@ Definitions of simple concepts are defined in this chapter, these simple concept
 \end{itemize}
 
 \section{Color}
+\begin{definition}
+  A color is anything from a set of object that has well defined equality.
+\end{definition}
 This paper will usually define a color with a letter early in the alphabet (e.g. $a$, $b$ or $c$). But the only important property of colors for the no-rainbow problem is equality, we only care if two colors are the same or not. For the no-rainbow problem there are $r$ distinct colors and all have to be present so the coloring is surjective.
 
-The color that is the smallest is considered the 0-zero. In the case of letters $a$ is the zero colors since it's smaller than all other colors.
+\begin{definition}
+  The zero-color is the color which is smaller of equal to all other colors.
+\end{definition}
+The color that is the smallest is considered the zero-color. In the case of letters $a$ is the zero colors since it's smaller than all other colors.
 
 \section{Coloring}
+\begin{definition}
+  A coloring is a sequence of colors which can be mapped to specific nodes in a graph.
+\end{definition}
 Each coloring of a graph can be thought of as a string of colors where the index of each color-symbol is bound to one node - these are called colorings.
 
 Each vertex is mapped to a unique integer in $[0, |V(G)|)$, this can then be used to create a mapping for each node to a color. In mathematical terms $\forall \quad x, y \in V(G), \quad i(x), i(y) \in [0, |V(G)|) \quad x = y \iff i(x) = i(y)$, two vertices are the same if they share the same index and vice versa, this creates a mapping from vertices to indices. Note that this mapping can be arbitrary, and one way of generating the mapping is by randomly placing each vertex a list and using the index into that list. The most important property is that this mapping is stable.
 
 We can now define a coloring as a sequence of colors of length $|V(G)|$. For a graph with 5 nodes the coloring $abcde$ would color all of the nodes differently. This format is pretty terse and has some other nice properties. This format of colorings hides the secrets to speed up.
 
-\section{Surjective}
+\section{Surjective Coloring}
+\begin{definition}
+  A surjective coloring is a coloring which uses all colors.
+\end{definition}
 A coloring is considered surjective if all colors are present. Consider that we have 3 colors $a$, $b$ and $c$. The coloring $aaa$ is not surjective, since it lacks $b$ and $c$. The coloring $abc$ is surjective since it has all 3 colors present. In the context of the no-rainbow problem a coloring is surjective if it has $r$ distinct colors present.
 
 \section{Equivalent Colorings}
+\begin{definition}
+  Two colorings are equivalent if and only if the colors in the first can be renamed to get the second color.
+\end{definition}
 Since the no-rainbow problem only care about the equality of colors we can use a sub-set of all available colorings of a graph. Consider the colorings $aaa$ and $bbb$. We can create a mapping from color to color and change the first coloring ($aaa$) into the second coloring ($bbb$) by changing all $a$s to $b$s. Since this renaming does not affect the equality of any pairs of nodes these colorings have to be equivalent. We do not need to search both of these colorings, if one coloring is valid so is the other one, and vice versa. This holds true for all colorings, consider $abc$ and it's 5 equivalent colorings: $acb$, $bac$, $bca$, $cab$, $cba$. Note that the number of equivalent colorings is the number of permutations of the number of colors, or $r!$.
 
 We define an ordering for all colors, in this paper alphabetical order will be used. So $a < b < c$ when ordering colors. Each coloring can then be ordered using lexicographic ordering. For all colorings with 3 distinct colors we get $abc < acb < bac < bca < cab < cba$. We then pick the ''smallest'' coloring, the first coloring when all equivalent colorings are lexicographically sorted, this is referred to as the representative. Each coloring can be mapped to an equivalent representative coloring.
 
-\section{Categories of Colorings}
-We can also group colorings into categories. This can be done by mapping the coloring to it's representative, the coloring which is equivalent and lexicographically sorted first. Then we replace all but the first appearance of color with the 0-color (in our case $a$), we now have the representative category of the coloring. An example will make this clearer.
+\section{Categories of Colorings} \label{sec:map-cat}
+\begin{definition}
+  A category of colorings contain colorings that have an equivalent coloring that can be mapped to a category representative. 
+\end{definition}
+
+We can also group colorings into categories. This can be done by mapping the coloring to it's representative, the coloring which is equivalent and lexicographically sorted first. Then we replace all but the first appearance of color with the zero-color (in our case $a$), we now have the representative category of the coloring. An example will make this clearer.
 
 Consider the coloring $cbbaabbc$, we can easily find the representative equivalent coloring by the renaming: $c \rightarrow a, b \rightarrow a, a \rightarrow c$. This gives us $abbccbba$ (which indeed comes before $cbbaabbc$ lexicographically). We then replace all the colors after the first appearance of each color with $a$ and we get $abacaaaa$, which is our category representative.
 
@@ -80,7 +108,7 @@ The category representatives correspond to the nodes where searching starts in t
 
 We further note that each coloring can be mapped to exactly one category. If we search all categories we have searched all equivalent nodes and the categories perfectly partition the space of all colorings.
 
-There are two surjective categories which are very simple to reason about, the smallest category and the largest category. The smallest category has the longest prefix of 0-colors, e.g. $aaabc$ -- 6 node in total and 1 equivalent representative. The largest category has the longest suffix of 0-color, e.g. $abcaa$ -- 54 nodes and 9 equivalent representatives in total. The smallest category always has exactly one node. Also note that a tail of 0-colors is completely unconstrained and a prefix of 0-colors is forced to stay, if we are to only visit the equivalent representatives.
+There are two surjective categories which are very simple to reason about, the smallest category and the largest category. The smallest category has the longest prefix of zero-colors, e.g. $aaabc$ -- 6 node in total and 1 equivalent representative. The largest category has the longest suffix of zero-color, e.g. $abcaa$ -- 54 nodes and 9 equivalent representatives in total. The smallest category always has exactly one node. Also note that a tail of zero-colors is completely unconstrained and a prefix of zero-colors is forced to stay, if we are to only visit the equivalent representatives.
 
 A complete listing of all categories and the equivalent representative colorings which are a part of them for $n=5, r=3$ is shown in Figure \ref{fig:cats}. For the surjective colorings there are always $r!$ equivalent colorings. This is now true for the non-surjective colorings. The Figure \ref{fig:cats} shows the 6 surjective categories and the 6 non-surjective categories. We can see largest surjective category $abcaa$ and the smallest surjective category $aaabc$.
 
@@ -177,29 +205,109 @@ A complete listing of all categories and the equivalent representative colorings
 \end{center}
 
 \chapter{The Improved Algorithm for the No-Rainbow problem}
+There is one key differences between the improved algorithm and the one presented by Parvini et al. Before visiting a node further down we check if the node is (1) a representative equivalence node, and (2) if we stay in the same category. This limits the branching factor of the algorithm and produces a large speedup.
 
+
+\section{The Algorithm}
+\begin{figure}
 \begin{verbatim}
 DetNRC(H):
-  foreach top_coloring(c, F) do
+  foreach CategoryRepresentative(c, F) do
     if DetLocalSearch(H, c, F) then
       return YES
   return NO
 
-DetLocalSearch(H, c, F):
-  -- This is the secret sauce
-  if g = 0 and induces_raindbow_edge(c, H) then return NO
-  if induces_raindbow_edge(c, H).issubset(F) then return NO
+DetLocalSearchImproved(H, c, F):
+  if any e in induces_raindbow_edge(c, H) where e.is_subset(F) then return NO
   if is_no_rainbow_coloring(c, H) then return YES
   if |e intersect F| != r - 1 forall e in E then return YES
+
+  -- Follows from the if-statement above
   e' = pick_any(e where |e intersect F| == r - 1)
-  v = pick_any(v in (e' - F))
+  v = (e' - F)
+
   foreach j in [r] - {c(v)} do
     c' := c but c(v) = j
     if not isSameCategory(c', c) then continue
-    if not isRepresentativeColoring(c') then continue
     if DetLocalSearch(H, c', F union {v}) then return YES
 
   return NO
 \end{verbatim}
+\label{alg:nrc++}
+\caption{The suggested algorithm for solving the No-Rainbow problem faster.}
+
+\end{figure}
+
+% TODO: Add some references here
+Consider the coloring $abacda$. Let us assume we find that node corresponding to the middle $a$ (marked here with an underline $ab\underline{a}cda$) needs changing of color in the for-loop in Figure \ref{alg:nrc++}. The suggested algorithm would not expand the node $ab\underline{d}cda$ or $ab\underline{c}cda$ here. $abdcda = abcdca$ will be visited from $abcdaa$ if required. $abccda$ is part of another category and will be visited when we expand $abcada$. These extra requirements grantee that we visit each surjective coloring exactly once and give us a branching factor of $2r/3$ instead of $r-1$ -- the lower branching factor results in an asymptotically faster algorithm. Not expanding the node multiple times makes this algorithm faster then the previously best algorithm and is the secret sauce.
+
+\section{Correctness}
+Given that the algorithm by Parvini et al. is correct, we can easily prove the improved algorithm is correct.
+
+\begin{lemma}
+  Let $G$ by an $r$-regular hyper-graph with $n$ nodes. Suppose there exists a no-rainbow coloring with an equivalence representative $k$. $k$ has to be have a category representative $c$ within edit distance $n - r$.
+\end{lemma}
+\begin{proof}
+  We can map $k$ to a category representative $c$ as mentioned in Section \ref{sec:map-cat}. $k$ and $c$ agree on at least $r$ nodes -- the nodes in $c$ that are not the zero-color except the first color which is always fixed. Thus there are $r$ nodes which are shared, so $d(c, k) \le n - r$.
+\end{proof}
+
+% Copy lemma 2
+See Lemma 2 from Parvini et al. This lemma shows that 3rd if-statement (\texttt{if |e intersect F| != r - 1 forall e in E then return YES}) is correct.
+
+\begin{lemma}
+  Let $G$ by an $r$-regular hyper-graph with $n$ nodes. Suppose there exists a no-rainbow coloring with an equivalence representative $k$. $k$ has to be have a category representative $c$ within edit distance $n - r$.
+\end{lemma}
+\begin{proof}
+  We can map $k$ to a category representative $c$ as mentioned in Section \ref{sec:map-cat}. $k$ and $c$ agree on at least $r$ nodes -- the nodes in $c$ that are not the zero-color except the first color which is always fixed. Thus there are $r$ nodes which are shared, so $d(c, k) \le n - r$.
+\end{proof}
+
+% \begin{lemma}
+%   Let $G$ by an $r$-regular hyper-graph. Each equivalence class coloring is reachable from exactly one category representative.
+% \end{lemma}
+% \begin{proof}
+%   First, the algorithm does not allow switching categories while searching, this means we can reason about each category individually.
+% 
+%   Consider a coloring $x$ that is reachable from two other colorings $a$ and $b$, where $x, a, b$ all are representative coloringsj
+% \end{proof}
+
+\begin{lemma}
+  Let $G$ by an $r$-regular hyper-graph with $n$ nodes. No category is deeper then $n - r$.
+\end{lemma}
+\begin{proof}
+  Since at least $r$ node are frozen in each category the maximum edit-distance in a category is $n - r$.
+\end{proof}
+
+\begin{lemma} \label{lemma:fazter}
+  Let $G$ by an $r$-regular hyper-graph with $n$ nodes. The average branching factor of all colorings is $(n - r) / 2$.
+\end{lemma}
+\begin{proof}
+  TBA, run some simulations and see what happens.
+\end{proof}
+
+
+\begin{lemma}
+  Let H be an $r$-regular hyper-graph with $n$ nodes. $(c, F)$ is a category representative with a set of frozen nodes for the category $c$, then \texttt{DetLocalSearch(H, c, F)} returns 1 if $c$ is within $n - r$ of a no-rainbow coloring in that category, and 0 otherwise.
+\end{lemma}
+\begin{proof}
+  The first three if-statements abort the search early and are the base-case for the algorithm. If there is $c$ induces a rainbow edge $e$ and all nodes in that edge are frozen there cannot exist a no-rainbow coloring further down. If $c$ is a no-rainbow coloring we are done. The third if-statement is handled by Lemma 2 from Parvini et al and is correct.
+
+  If the base-case does not hold we pick an edge that is maximally constrained with exactly 1 free node called $v$. $v$ has to have a different color for there to be a no-rainbow coloring. If we have to move to a different category to recolor $v$ we can abort the search since the no-rainbow coloring exists in a different category if it exists at all. By adding $v$ to $F$ and  changing the color of $v$ we are one step closer to solution.
+\end{proof}
+
+The running time of \texttt{DetLocalSearch} depends on the category representative. Lemma \ref{lemma:fazter} gives an estimate of the average branching factor, giving us the average worst case run time of \texttt{DetLocalSearch} to be $O^*(\frac{n - r}{2}^{n - r})$
+
+
+% Visits all solutions
+% Visits each EQ-node exactly once
+% Will visit the node if it is required
+% Un-hindered by the category and representative-eq
+
+\section{Runtime}
+
+% Most search-trees are shorter, trivally shows the algorithm is strictly faster. Branching factor for each category is better or same
+% Average branching factor is way better, and thus the algorithm runs way faster - but how much? 
+
+\section{Implementation}
+% I implement the algorithms and run some tests, the improvement can then be measured and shown to be substantial.
 
 \end{document}
