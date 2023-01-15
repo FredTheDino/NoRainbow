@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{book}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Imports
@@ -14,100 +14,170 @@
 \usepackage{svg}
 \usepackage{listings}
 \usepackage{adjustbox}
-
-\svgpath{{svgs/}}
+\usepackage{forest}
+\usetikzlibrary{er}
 
 \pagestyle{empty}
 
+\title{A Faster Algorithm for the No-Rainbow Problem}
+\author{Edvard Thörnros}
+\date{2023-01-15}
+
 \begin{document}
 
-\section{The new algorithms}
-The currently fastest algorithm is pretty good.
-It's well thought out and quite efficient.
-But the algorithm searches a lot of redundant space.
-Some colorings have to have the same validity as others and search them as many times as there are duplicates ($r!$) is a waste.
-The key insight is that we can end some searches earlier if we know we eventually reach a coloring with equivalent validity.
+\maketitle
+
+\tableofcontents
 
 
-There are some different kinds of colorings that I've decided to group in a very specific way.
-We always start at the nodes that match the \textit{top-regex}, I call these \textit{top-coloring}.
 
-\subsection{Equivalence classes of colorings}
-Consider that we use the colors $a, b, c, d \dots$. We order them alphabetically which gives us an ordering of the coloring.
-The \textit{top-regex} requires all colors and exactly one of each color in ``rising`` order with the first colors spread between them.
-All colors also have to be present, so we only allow surjective colorings.
-\\[1em]
-\textit{top-regex}: $aa*ba*ca*\dots$ \hspace{1em} \textit{e.g.}: $abc$, $abaca$, $aabaacaa$
-\\[1em]
-There are also equivalence classes, where colorings which have to be valid at the same time are mapped to.
-Consider the colorings $abc$ and $cba$. No matter the edge configuration of the hyper graph, these two colorings have to share validity.
-This is because we can rename each color to get the other color -- colorings only care about the internal equality of colors.
-We can then send all of these to their representative by renaming the colors. We start from the left and rename all colors, calling
-the first color we see $a$, the second $b$ and so on. We can also describe a regex that matches this.
-\\[1em]
-\textit{eq-regex}: $a[a]*b[ab]*c[abc]*\dots$ \hspace{1em} \textit{e.g.}: $abc$, $ababacaa$, $aabaccab$
-\\[1em]
-Note specially that if \textit{top-regex} matches, then \textit{eq-regex} also matches. All top-nodes are eq-nodes, \textit{top-reqeg} implies \textbf{eq-regex}.
-\textit{eq-regex} matching is a requirement for \textit{top-regex} to match.
+% TODO: Define the norainbow problem
+% TODO: Show and explain the previous algorithm
+% TODO: Write an introduction
 
-% TODO image
+\chapter{The No-Rainbow Problem}
+TBA
 
-\begin{figure}[h!]
-  \includegraphics[width=\textwidth]{c_5_2.png}
-  \caption{A complete list of all coloring equivalence classes for a hypergraph with 5 nodes and 2 nodes per edge. Edges are between nodes with edit distance 1. \textit{top-node} are drawn above the other nodes. The number of nodes in each class is written after the representative color.}
-  \label{fig:eqvClass}
+\chapter{The Current Fastest Algorithm for the No-Rainbow problem}
+TBA
+
+\chapter{Definitions}
+Definitions of simple concepts are defined in this chapter, these simple concepts are then built on in the final algorithm. These definitions could be understood separately to make the work as clear and easy to follow as possible.
+
+\section{Notation}
+\begin{itemize}
+  \item $V(G)$ -- The set of nodes in the graph $G$ 
+  \item $|V(G)|$ -- The number of nodes in the graph $G$ 
+  \item $a!$ -- The faculty of $a$, $\Pi_{x=1}^a(x)$, the product of all natural numbers including $a$
+\end{itemize}
+
+\section{Color}
+This paper will usually define a color with a letter early in the alphabet (e.g. $a$, $b$ or $c$). But the only important property of colors for the no-rainbow problem is equality, we only care if two colors are the same or not. For the no-rainbow problem there are $r$ distinct colors and all have to be present so the coloring is surjective.
+
+The color that is the smallest is considered the 0-zero. In the case of letters $a$ is the zero colors since it's smaller than all other colors.
+
+\section{Coloring}
+Each coloring of a graph can be thought of as a string of colors where the index of each color-symbol is bound to one node - these are called colorings.
+
+Each vertex is mapped to a unique integer in $[0, |V(G)|)$, this can then be used to create a mapping for each node to a color. In mathematical terms $\forall \quad x, y \in V(G), \quad i(x), i(y) \in [0, |V(G)|) \quad x = y \iff i(x) = i(y)$, two vertices are the same if they share the same index and vice versa, this creates a mapping from vertices to indices. Note that this mapping can be arbitrary, and one way of generating the mapping is by randomly placing each vertex a list and using the index into that list. The most important property is that this mapping is stable.
+
+We can now define a coloring as a sequence of colors of length $|V(G)|$. For a graph with 5 nodes the coloring $abcde$ would color all of the nodes differently. This format is pretty terse and has some other nice properties. This format of colorings hides the secrets to speed up.
+
+\section{Surjective}
+A coloring is considered surjective if all colors are present. Consider that we have 3 colors $a$, $b$ and $c$. The coloring $aaa$ is not surjective, since it lacks $b$ and $c$. The coloring $abc$ is surjective since it has all 3 colors present. In the context of the no-rainbow problem a coloring is surjective if it has $r$ distinct colors present.
+
+\section{Equivalent Colorings}
+Since the no-rainbow problem only care about the equality of colors we can use a sub-set of all available colorings of a graph. Consider the colorings $aaa$ and $bbb$. We can create a mapping from color to color and change the first coloring ($aaa$) into the second coloring ($bbb$) by changing all $a$s to $b$s. Since this renaming does not affect the equality of any pairs of nodes these colorings have to be equivalent. We do not need to search both of these colorings, if one coloring is valid so is the other one, and vice versa. This holds true for all colorings, consider $abc$ and it's 5 equivalent colorings: $acb$, $bac$, $bca$, $cab$, $cba$. Note that the number of equivalent colorings is the number of permutations of the number of colors, or $r!$.
+
+We define an ordering for all colors, in this paper alphabetical order will be used. So $a < b < c$ when ordering colors. Each coloring can then be ordered using lexicographic ordering. For all colorings with 3 distinct colors we get $abc < acb < bac < bca < cab < cba$. We then pick the ''smallest'' coloring, the first coloring when all equivalent colorings are lexicographically sorted, this is referred to as the representative. Each coloring can be mapped to an equivalent representative coloring.
+
+\section{Categories of Colorings}
+We can also group colorings into categories. This can be done by mapping the coloring to it's representative, the coloring which is equivalent and lexicographically sorted first. Then we replace all but the first appearance of color with the 0-color (in our case $a$), we now have the representative category of the coloring. An example will make this clearer.
+
+Consider the coloring $cbbaabbc$, we can easily find the representative equivalent coloring by the renaming: $c \rightarrow a, b \rightarrow a, a \rightarrow c$. This gives us $abbccbba$ (which indeed comes before $cbbaabbc$ lexicographically). We then replace all the colors after the first appearance of each color with $a$ and we get $abacaaaa$, which is our category representative.
+
+The category representatives correspond to the nodes where searching starts in the no-rainbow algorithm.
+
+We further note that each coloring can be mapped to exactly one category. If we search all categories we have searched all equivalent nodes and the categories perfectly partition the space of all colorings.
+
+There are two surjective categories which are very simple to reason about, the smallest category and the largest category. The smallest category has the longest prefix of 0-colors, e.g. $aaabc$ -- 6 node in total and 1 equivalent representative. The largest category has the longest suffix of 0-color, e.g. $abcaa$ -- 54 nodes and 9 equivalent representatives in total. The smallest category always has exactly one node. Also note that a tail of 0-colors is completely unconstrained and a prefix of 0-colors is forced to stay, if we are to only visit the equivalent representatives.
+
+A complete listing of all categories and the equivalent representative colorings which are a part of them for $n=5, r=3$ is shown in Figure \ref{fig:cats}. For the surjective colorings there are always $r!$ equivalent colorings. This is now true for the non-surjective colorings. The Figure \ref{fig:cats} shows the 6 surjective categories and the 6 non-surjective categories. We can see largest surjective category $abcaa$ and the smallest surjective category $aaabc$.
+
+
+\begin{center}
+  \begin{figure}
+\centering
+\vspace{1em}
+
+\begin{forest}
+  [\underline{ aaabc },circle,draw
+  ]
+\end{forest}
+
+\begin{forest}
+  [\underline{ aabac },circle,draw
+    [aabbc]
+  ]
+\end{forest}
+\begin{forest}
+  [\underline{ aabca },circle,draw
+    [aabcc]
+    [aabcb]
+  ]
+\end{forest}
+\begin{forest}
+  [\underline{ abaac },circle,draw
+    [ababc]
+    [abbac]
+    [abbbc]
+  ]
+\end{forest}
+\begin{forest}
+  [\underline{ abaca },circle,draw
+    [abbcc]
+    [abacc]
+    [abacb]
+    [abbca]
+    [abbcb]
+  ]
+\end{forest}
+
+\begin{forest}
+  [\underline{ abcaa },circle,draw
+    [abcac]
+    [abcab]
+    [abccc]
+    [abcca]
+    [abccb]
+    [abcbc]
+    [abcba]
+    [abcbb]
+  ]
+\end{forest}
+
+\begin{forest}
+  [aaaaa,circle,draw
+  ]
+\end{forest}
+\begin{forest}
+  [aaaab,circle,draw
+  ]
+\end{forest}
+
+\begin{forest}
+  [aaaba,circle,draw
+    [aaabb]
+  ]
+\end{forest}
+\begin{forest}
+  [aabaa,circle,draw
+    [aabbb]
+    [aabab]
+    [aabba]
+  ]
+\end{forest}
+\begin{forest}
+  [abaaa,circle,draw
+    [abaab]
+    [abbaa]
+    [abbab]
+    [abbbb]
+    [ababa]
+    [ababb]
+    [abbba]
+  ]
+\end{forest}
+
+\vspace{1em}
+
+\caption{A visualization of all the equivalent representatives in each category for $n=5, r=3$. A category representative is marked with a circle, if the category has all colors in it an underline is added. Only the equivalence representatives are shown to make the figure easier to parse.}
+\label{fig:cats}
 \end{figure}
+\end{center}
 
-The Figure \ref{fig:eqvClass} is a super-small example for a toy part of the problem, but I still think it clearly demonstrates the idea for this grouping. Looking at the graphs for coloring of larger problem instances, the visualization quickly becomes unwieldy. 
+\chapter{The Improved Algorithm for the No-Rainbow problem}
 
-
-\subsection{Coloring Categories}
-We will also need to reason about what I've decided to call ''coloring categories''. ''coloring categories'' are groupings of the coloring equivalence classes.
-Each category can be described by a tuple of $k$ numbers. Each number corresponds to how many ''slots'' a certain set of colors can be used in, or another way of looking at it how long each ''part'' of the \textbf{eq-regex} is.
-
-\newpage
-$$
-  \tikzmark{s1}aa\tikzmark{e1} \hspace{0.2em} \tikzmark{s2}ba\tikzmark{e2} \hspace{0.2em} \tikzmark{s3}ccba\tikzmark{e3} \hspace{0.2em} \tikzmark{s4}daa\tikzmark{e4}
-$$
-\begin{figure}[h!]
-\begin{tikzpicture}[overlay, remember picture, main/.style = {}]
-  
-  \node[main, color=blue]  (g1) at (4,0.3) {only a (2 long)};
-  \node[main, color=magenta] (g2) at (4,2.0) {a or b (2 long)};
-  \node[main, color=red]   (g3) at (8,0.3) {a, b or c (4 long)};
-  \node[main, color=cyan]  (g4) at (8,2.0) {a, b, c or d (3 long)};
-
-  \draw[-, line width=3mm, opacity=0.5, color=blue] ([yshift=1mm]pic cs:s1) -- ([yshift=1mm]pic cs:e1);
-  \draw[-, line width=3mm, opacity=0.5, color=magenta] ([yshift=1mm]pic cs:s2) -- ([yshift=1mm]pic cs:e2);
-  \draw[-, line width=3mm, opacity=0.5, color=red] ([yshift=1mm]pic cs:s3) -- ([yshift=1mm]pic cs:e3);
-  \draw[-, line width=3mm, opacity=0.5, color=cyan] ([yshift=1mm]pic cs:s4) -- ([yshift=1mm]pic cs:e4);
-
-  \draw[color=blue] (g1) -- (pic cs:s1);
-  \draw[color=magenta] (g2) -- (pic cs:s2);
-  \draw[color=red] (g3) -- (pic cs:e3);
-  \draw[color=cyan]  (g4) -- (pic cs:e4);
-
-\end{tikzpicture}
-  \caption{A colorcoded labeling of the different parts of a coloring represented as a tuple.}
-  \label{fig:catColor}
-\end{figure}
-
-Consider the labeling of the coloring $aabaccbadaa$ in Figure \ref{fig:catColor}.
-The length of each segment of the coloring -- where we have the same allowed characters according to the regex -- it is mapped to the category tuple $(2, 2, 4, 3)$.
-
-It is particularly important to notice that each coloring equivalence class belongs to exactly one coloring category. It is also important to notice that each color category corresponds to exactly one (1) top node. The grouping into categories results in a partition of the coloring of the equivalence classes which is total.
-
-\begin{figure}[h!]
-  \includegraphics[width=\textwidth]{c_5_2.png}
-  \caption{}
-  \label{fig:catColorGrouping}
-\end{figure}
-
-\pagebreak
-\section{Modifications to the existing algorithm}
-By not visiting coloring that are equivalent we know this algorithm runs at least as fast original proposed algorithm.
-
-\subsection{Pseudocode}
 \begin{verbatim}
 DetNRC(H):
   foreach top_coloring(c, F) do
@@ -131,66 +201,5 @@ DetLocalSearch(H, c, F):
 
   return NO
 \end{verbatim}
-\pagebreak
-
-\subsection{Proofs}
-I am starting to doubt this algorithms correctness.
-
-\subsubsection{All equivalence classes are within the edit distance of $n - r$ from their corresponding \textit{top-node}}
-Pick a random surjective coloring $X$. We can now send it to it's representative by renaming the colors, calling the new color $X'$.
-We know $X'$ matches the \textbf{eq-regex}, since it is surjective and a representation.
-
-If we now change all but the first appearance of each color to the $a$-color, we have something that matches a \textit{top-node}.
-We have $r$ unique colors to pick from, and $n$ nodes.
-This means the edit distance from any surjective coloring to its corresponding \textit{top-node} is at most $n - r$. $r$ is the number of frozen nodes.
-
-\subsubsection{Some clarification and an example}
-Since the first appearance of a color in the coloring tuple has to be the same -- we can at most replace all other colors.
-Consider $aabbcc$, the corresponding \textit{top-node} is $aabaca$.
-
-\subsubsection{We know we visit all coloring categories} 
-Since each category (e.g. $(1, 2, 3, 4)$) corresponds to one \textit{top-node} (e.g. $abacaadaaa$) and we visit all \textit{top-nodes} we visit all categories.
-
-\subsubsection{We know we visit all colorings in a coloring category} 
-Consider a representative coloring $X$. We know the algorithm only searches within one category at a time, so we can only visit $X$ if we started in the category of $X$.
-We know $X$ is reachable from the \textit{top-node} since the frozen nodes of the top-coloring are shared. We can then edit out way closer to $X$ from the \textit{top-node} by visiting other nodes which also have to be part of the same category.
-
-\subsection{Runtime}
-Faster, cuts out a large ''chunk'' of the nodes so asymptotically faster -- I really struggle with this. I is somehow related to sterling numbers of the second kind, 
-but there's still overlap in the search. But a limitation of the total number of possible states should result in a large speedup.
-Maybe a good estimate is $O^*(\left(r-1\right)^{\left(\frac{n\left(r-1\right)}{2r}\right)})$ if I claim I limit the number of coloring by at least a factor 2.
-
-
-%%%%%%%%%%%%%%%%%%%%%%
-
-\section{A new worst-case optimized algorithm}
-This algorithm goes through each equivalent coloring checking if it is a no-rainbow coloring.
-
-\pagebreak
-\subsection{Some ''pseudocode''}
-The core idea is to just list all equivalence classes and try them. This is the best algorithm that doesn't reason about the edges, since this is the fastest we can test each potential coloring. To make this faster we would need to cut out more colorings that cannot hold.
-
-\begin{adjustbox}{max size={\textwidth}{\textheight}}
-\lstinputlisting[language=Python]{no-rainbow-algorithm.py}
-\end{adjustbox}
-
-\subsection{Proofs}
-The proofs to show this algorithm works as expected.
-
-\subsubsection{All nodes in a category are visited}
-Consider a coloring $X$. We can find the top-node by finding the category $C$ this node belongs to.
-We try all combinations of colorings.
-
-\subsubsection{Correctness}
-We visit all equivalence classes. Since equivalence classes are equivalent in their validity of the coloring we know we've tested all colorings. This program exhaustively tests all colorings, so is correct.
-
-\subsubsection{We visit each coloring exactly once}
-(Checked by running the program for $r<10$ and $n < 15$)
-TBA
-
-\subsection{Runtime}
-Since we can check if the coloring is no-rainbow in polynomial time, and we only visit each equivalence class node once. We can deduce the runtime to $O(S(n, r)/r!)$. Using an estimate (curtsy of Wikipedia), the estimated asymptotic time complexity is $O(\frac{r^n}{r!^2})$ (assuming $r$ is small and $n$ is large).
-
-This is faster for $r > 6$, by quite a wide margin.
 
 \end{document}
