@@ -26,7 +26,7 @@ def visit_all_in_category(non_zero_colors, c, seen, i, is_new=True):
         d = c[:i] + other + c[i+1:]
 
         # Different category check
-        if any(d.find(k) != c.find(k) for k in non_zero_colors): continue
+        if not is_same_category(d, c, non_zero_colors): continue
 
         visit_all_in_category(non_zero_colors, d, seen, i - 1, True)
 
@@ -45,6 +45,8 @@ def find_top(alphabet, length, zero_color="a"):
             prefix = alphabet[0] + zero_color * i
             yield from [prefix + suffix for suffix in find_top(alphabet[1:], length - i)]
 
+def is_same_category(a, b, non_zero_colors):
+    return all(d.find(k) == c.find(k) for k in non_zero_colors)
 
 def is_increasing_and_positive(l):
     return all(a < b and a >= 0 and b >= 0 for (a, b) in zip(l, l[1:]))

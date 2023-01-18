@@ -1,5 +1,6 @@
-from itertools import product
+from itertools import product, combinations_with_replacement
 from collections import defaultdict
+from math import factorial
 
 def spy(x):
     print(x)
@@ -19,18 +20,14 @@ def is_sorted(xs):
         p = x
     return True
 
-def avg(xs):
-    return prod(xs) ** (1/len(xs))
+def tree_size(xs):
+    return prod(xs)
 
 def count(r, n):
-    c = 0
-    a = 0
-    for thing in product(range(1, r + 1), repeat=n - r):
-        if is_sorted(thing) and thing:
-            c += 1
-            a += avg(thing)
+    return sum(tree_size(thing) for thing in combinations_with_replacement(range(1, r + 1), n - r))
 
-    return a / c
+def other(r, n):
+    return sum((r - 1) ** ((r - 1) * n/ r) for thing in combinations_with_replacement(range(1, r + 1), n - r))
 
 def count_occ(xs):
     cs = defaultdict(int)
@@ -48,9 +45,11 @@ def count_occ(xs):
 # 25
 # print(count(3, 5))
 
-for r in [7]:
-    for n in range(r + 1, 50):
-        print(f"r={r}, n={n}: {count(r, n)}")
+for r in [20]:
+    for n in range(r + 1, 30):
+        x = count(r, n)
+        y = factorial(n)
+        print(f"r={r}, n={n}: {x}/{y} = {x/y:0.3} | {int(y/x)}")
 
 
 # |states| = S(n, r) -- This is the maximum number of states visited
