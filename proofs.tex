@@ -30,7 +30,6 @@
 
 \title{A Faster Algorithm for the No-Rainbow Problem}
 \author{Edvard Thörnros}
-\date{2023-01-15}
 
 \begin{document}
 
@@ -44,11 +43,11 @@
 % TODO: Show and explain the previous algorithm
 % TODO: Write an introduction
 
-\chapter{The No-Rainbow Problem}
-TBA
-
-\chapter{The Current Fastest Algorithm for the No-Rainbow problem}
-TBA
+% \chapter{The No-Rainbow Problem}
+% TBA
+% 
+% \chapter{The Current Fastest Algorithm for the No-Rainbow problem}
+% TBA
 
 \chapter{Definitions}
 Definitions of simple concepts are defined in this chapter, these simple concepts are then built on in the final algorithm. These definitions could be understood separately to make the work as clear and easy to follow as possible.
@@ -60,8 +59,8 @@ Definitions of simple concepts are defined in this chapter, these simple concept
   \item $a!$ -- The faculty of $a$, $\Pi_{x=1}^a(x)$, the product of all natural numbers including $a$
 \end{itemize}
 
-\section{Color}
-\begin{definition}
+\section{Color} \label{def:color-order}
+\begin{definition} 
   A color is anything from a set of object that has well defined equality.
 \end{definition}
 This paper will usually define a color with a letter early in the alphabet (e.g. $a$, $b$ or $c$). But the only important property of colors for the no-rainbow problem is equality, we only care if two colors are the same or not. For the no-rainbow problem there are $r$ distinct colors and all have to be present so the coloring is surjective.
@@ -112,6 +111,15 @@ There are two surjective categories which are very simple to reason about, the s
 
 A complete listing of all categories and the equivalent representative colorings which are a part of them for $n=5, r=3$ is shown in Figure \ref{fig:cats}. For the surjective colorings there are always $r!$ equivalent colorings. This is now true for the non-surjective colorings. The Figure \ref{fig:cats} shows the 6 surjective categories and the 6 non-surjective categories. We can see largest surjective category $abcaa$ and the smallest surjective category $aaabc$.
 
+\section{Category Tuple} \label{sec:cat-tup}
+\begin{definition}
+  Each category is uniquely defined by a map from color to number describing the number of nodes with each color in the largest coloring.
+\end{definition}
+Let's start by considering an example. Consider the category represented by $aabaca$, the largest color in this category is $aabbcc$ -- we cannot change any $a$s to $b$s or $b$s to $c$s without jumping to a different category. By counting the number of each letter in the largest color we get a mapping $a \rightarrow 2, b \rightarrow 2, c \rightarrow 2$ -- we can express this more tersely as a tuple $(2, 2, 2)$. 
+
+We easily see that all categories have a largest member (Since the ordering of colors is well-defined in the Definition \ref{def:color-order}) and no category is empty since each has at least a representative. 
+
+Also note that the sum of all the values in the category tuple is $n$.
 
 \begin{center}
   \begin{figure}
@@ -239,9 +247,8 @@ DetLocalSearchImproved(H, c, F):
 \end{figure}
 
 % TODO: Add some references here
-Consider the coloring $abacda$. Let us assume we find that node corresponding to the middle $a$ (marked here with an underline $ab\underline{a}cda$) needs changing of color in the for-loop in Figure \ref{alg:nrc++}. The suggested algorithm would not expand the node $ab\underline{d}cda$ or $ab\underline{c}cda$ here. $abdcda = abcdca$ will be visited from $abcdaa$ if required. $abccda$ is part of another category and will be visited when we expand $abcada$. These extra requirements grantee that we visit each surjective coloring exactly once and give us a branching factor of $2r/3$ instead of $r-1$ -- the lower branching factor results in an asymptotically faster algorithm. Not expanding the node multiple times makes this algorithm faster then the previously best algorithm and is the secret sauce.
+Consider the coloring $abacda$. Let us assume we find that node corresponding to the middle $a$ (marked here with an underline $ab\underline{a}cda$) needs changing of color in the for-loop in Figure \ref{alg:nrc++}. The suggested algorithm would not expand the node $ab\underline{d}cda$ or $ab\underline{c}cda$ here. $abdcda = abcdca$ will be visited from $abcdaa$ if required. $abccda$ is part of another category and will be visited when we expand $abcada$. These extra requirements grantee that we visit each surjective coloring exactly once and give us a branching factor of $2r/3$ instead of $r-1$ -- the lower branching factor results in an asymptotically faster algorithm. Not expanding the node multiple times makes this algorithm faster than the previously best algorithm and is the secret sauce.
 
-\section{Correctness}
 Given that the algorithm by Parvini et al. is correct, we can easily prove the improved algorithm is correct.
 
 \begin{lemma}
@@ -271,43 +278,47 @@ See Lemma 2 from Parvini et al. This lemma shows that 3rd if-statement (\texttt{
 % \end{proof}
 
 \begin{lemma}
-  Let $G$ by an $r$-regular hyper-graph with $n$ nodes. No category is deeper then $n - r$.
+  Let $G$ by an $r$-regular hyper-graph with $n$ nodes. No category is deeper than $n - r$.
 \end{lemma}
 \begin{proof}
   Since at least $r$ node are frozen in each category the maximum edit-distance in a category is $n - r$.
 \end{proof}
 
-\begin{lemma} \label{lemma:fazter}
-  Let $G$ by an $r$-regular hyper-graph with $n$ nodes. The average branching factor of all colorings is $(n - r) / 2$.
-\end{lemma}
-\begin{proof}
-  TBA, run some simulations and see what happens.
-\end{proof}
-
-
 \begin{lemma}
   Let H be an $r$-regular hyper-graph with $n$ nodes. $(c, F)$ is a category representative with a set of frozen nodes for the category $c$, then \texttt{DetLocalSearch(H, c, F)} returns 1 if $c$ is within $n - r$ of a no-rainbow coloring in that category, and 0 otherwise.
 \end{lemma}
 \begin{proof}
-  The first three if-statements abort the search early and are the base-case for the algorithm. If there is $c$ induces a rainbow edge $e$ and all nodes in that edge are frozen there cannot exist a no-rainbow coloring further down. If $c$ is a no-rainbow coloring we are done. The third if-statement is handled by Lemma 2 from Parvini et al and is correct.
+  The first three if-statements abort the search early and are the base-case for the algorithm. If there is $c$ induces a rainbow edge $e$ and all nodes in that edge are frozen there cannot exist a no-rainbow coloring further down. If $c$ is a no-rainbow coloring we are done. The third if-statement is handled by Lemma 2 from Parvini et al. and is correct.
 
   If the base-case does not hold we pick an edge that is maximally constrained with exactly 1 free node called $v$. $v$ has to have a different color for there to be a no-rainbow coloring. If we have to move to a different category to recolor $v$ we can abort the search since the no-rainbow coloring exists in a different category if it exists at all. By adding $v$ to $F$ and  changing the color of $v$ we are one step closer to solution.
 \end{proof}
 
-The running time of \texttt{DetLocalSearch} depends on the category representative. Lemma \ref{lemma:fazter} gives an estimate of the average branching factor, giving us the average worst case run time of \texttt{DetLocalSearch} to be $O^*(\frac{n - r}{2}^{n - r})$
+\begin{lemma} \label{lemma:fazter}
+  Let $G$ by an $r$-regular hyper-graph. The number of colorings in a category is $\sum^r_{i=1} (i - 1) * (a_i - 1)))$, where $a_i$ is the value in the category tuple for the color with index $i$.
+\end{lemma}
+\begin{proof}
+  Start by considering a random category and it's category tuple $(a_1, a_2, \dots, a_r)$. Consider one of these, $a_i$, if we decide to recolor a node with color of index $i$ we have to at most try the $i - 1$ other potential colors -- since we've already tried the first color, and we cannot go above $i$ since that would change our category (see Definition \ref{sec:cat-tup}). The first of these colors is also frozen and can be discarded. Using this knowledge we can write an expression of the number of colorings of a category $(0 * (a_1 - 1) + 1 * (a_2 - 1) + \dots + (r - 1) * (a_r - 1)))$.
+\end{proof}
 
+\begin{lemma} \label{lemma:time}
+  Let $G$ by an $r$-regular hyper-graph with $n$ nodes. The average branching factor for a category is at least $(r - 2) / 2$ for large $n$.
+\end{lemma}
+\begin{proof}
+  If we consider one element in a category tuple $(a_1, a_2, \dots, a_i, \dots, a_r)$, the distribution of the value $a$ is weighted towards low values and always in the range $[1,r-1]$, this means we can over-estimate the value with a uniformly distributed value $\hat{a_i}$ in the range $[1,r-1]$. We can now extend this estimate to the entire tuple, and we can then estimate the size of the category using Lemma \ref{lemma:fazter} giving us $\sum^r_{i=1} (i - 1) * (\hat{a_i} - 1)))$ -- we can now simplify this expression since it's a linear combination of uniform random variables we can combine all the coefficients to the average giving us the expression for the branching factor $(n-r)\hat{x}/(n - r)$ which has the expected median value of $E((n-r)\hat{x}/(n - r)) = (r - 2) / 2$.
+\end{proof}
 
-% Visits all solutions
-% Visits each EQ-node exactly once
-% Will visit the node if it is required
-% Un-hindered by the category and representative-eq
+\begin{lemma}
+  Let $G$ by an $r$-regular hyper-graph with $n$ nodes. The run time of \texttt{DetNRC} is at most $O^*((\frac{r - 2}{2})^{n - r})$.
+\end{lemma}
+\begin{proof}
+  Lemma \ref{lemma:time} tells us the branching factor can be over estimated with $(r - 2) / 2$, and we search a maximum depth of $n - r$ nodes. There is a polynomial number of invocations of \texttt{DetLocalSearch} and without the recursion the \texttt{DetLocalSearch} runs in polynomial time. Since the worst case visits all categories the running time has to be limited by the exponential function $(\frac{r - 2}{2})^{n - r}$.
+\end{proof}
 
-\section{Runtime}
 
 % Most search-trees are shorter, trivally shows the algorithm is strictly faster. Branching factor for each category is better or same
 % Average branching factor is way better, and thus the algorithm runs way faster - but how much? 
 
-\section{Implementation}
+% \section{Implementation}
 % I implement the algorithms and run some tests, the improvement can then be measured and shown to be substantial.
 
 \end{document}
