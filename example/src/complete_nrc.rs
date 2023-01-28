@@ -16,7 +16,7 @@ where
     assert_eq!(colors.iter().collect::<BTreeSet<&C>>().len(), R);
 
     let n = g.node_to_i.len();
-    for c in colors.iter().combinations(n) {
+    for c in colors.iter().combinations_with_replacement(n) {
         let c = Coloring(c.iter().map(|x| **x).collect());
         if g.is_no_rainbow_coloring(&c) {
             return Some(c);

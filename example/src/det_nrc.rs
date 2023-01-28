@@ -8,30 +8,33 @@ use crate::multigraph::{Coloring, MultiGraph};
 pub fn no_rainbow_coloring<X, C, const R: usize>(
     g: &MultiGraph<X, R>,
     colors: [C; R],
-) -> Option<Coloring<C>>
+) -> (usize, Option<Coloring<C>>)
 where
     X: Ord + Copy + Debug,
     C: Ord + Copy,
 {
     assert_eq!(colors.iter().collect::<BTreeSet<&C>>().len(), R);
 
+    let mut states = 0;
     let n = g.node_to_i.len();
     for picked in g.node_to_i.iter().combinations(R) {
         let f = picked.iter().map(|(x, _)| **x).collect::<BTreeSet<X>>();
-        let mut c = vec![colors[0]; R];
+        let mut c = vec![colors[0]; n];
         for (t, (_, i)) in colors.iter().zip(picked.iter()) {
             c[**i] = *t;
         }
 
-        match det_local_search(colors, g, Coloring(c), &f, (R - 1) * n / R) {
-            Some(out) => return Some(out),
+        match det_local_search(&mut states, colors, g, Coloring(c), &f, (R - 1) * n / R) {
+            Some(out) => return (states, Some(out)),
             None => continue,
         }
+        return (states, None);
     }
-    None
+    (states, None)
 }
 
 fn det_local_search<X, C, const R: usize>(
+    states: &mut usize,
     colors: [C; R],
     g: &MultiGraph<X, R>,
     c: Coloring<C>,
@@ -42,6 +45,7 @@ where
     X: Ord + Copy + Debug,
     C: Ord + Copy,
 {
+    *states += 1;
     if d == 0 && g.contains_rainbow_edge(&c) {
         return None;
     }
@@ -61,10 +65,12 @@ where
             let i = g.node_to_i[&v];
             let first_color = c.0[i];
             for t in colors.iter() {
-                if t == &first_color { continue; }
-                match det_local_search(colors, g, c.mutate(i, *t), &f, d - 1) {
+                if t == &first_color {
+                    continue;
+                }
+                match det_local_search(states, colors, g, c.mutate(i, *t), &f, d - 1) {
                     Some(c) => return Some(c),
-                    None => {},
+                    None => {}
                 }
             }
             return None;
