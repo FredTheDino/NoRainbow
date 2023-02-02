@@ -11,12 +11,12 @@ pub fn no_rainbow_coloring<X, C, const R: usize>(
 ) -> Option<Coloring<C>>
 where
     X: Ord + Copy + Debug,
-    C: Ord + Copy,
+    C: Ord + Copy + Debug,
 {
     assert_eq!(colors.iter().collect::<BTreeSet<&C>>().len(), R);
 
     let n = g.node_to_i.len();
-    for c in colors.iter().combinations_with_replacement(n) {
+    for c in vec![colors; n].iter().multi_cartesian_product() {
         let c = Coloring(c.iter().map(|x| **x).collect());
         if g.is_no_rainbow_coloring(&c) {
             return Some(c);

@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use std::collections::{BTreeSet, BTreeMap};
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Debug;
 use std::marker::Copy;
 
@@ -19,31 +19,19 @@ where
 
     let mut states = 0;
     let n = g.node_to_i.len();
-    let i_to_node = g.node_to_i.iter().map(|(a, b)| (*b, *a)).collect::<BTreeMap<usize, X>>();
     for picked in g.node_to_i.iter().combinations(R) {
-        let mut f = picked.iter().map(|(x, _)| **x).collect::<BTreeSet<X>>();
-        let mut c = vec![colors[0]; n];
-        let mut m = colors[0];
+        let f = picked.iter().map(|(x, _)| **x).collect::<BTreeSet<X>>();
 
-        for (s, (_, i)) in picked.iter().enumerate() {
-            c[**i] = colors[s];
-        }
-
-        for x in c.iter_mut() {
-            m = m.max(*x);
-            *x = m;
-        }
-
-        for (i, t) in c.iter().enumerate() {
-            if *t == colors[0] {
-                f.insert(i_to_node[&i]);
+        for start in 0..R {
+            let mut c = vec![colors[start]; n];
+            for (t, (_, i)) in colors.iter().zip(picked.iter()) {
+                c[**i] = *t;
             }
-        }
 
-        assert_eq!(Coloring(c.clone()).used_colors(), R);
-        match det_local_search(&mut states, colors, g, Coloring(c), &f) {
-            Some(out) => return (states, Some(out)),
-            None => continue,
+            match det_local_search(&mut states, colors, g, Coloring(c), &f) {
+                Some(out) => return (states, Some(out)),
+                None => continue,
+            }
         }
     }
     (states, None)
@@ -58,7 +46,7 @@ fn det_local_search<X, C, const R: usize>(
 ) -> Option<Coloring<C>>
 where
     X: Ord + Copy + Debug,
-    C: Ord + Copy,
+    C: Ord + Copy + Debug,
 {
     *states += 1;
     if g.induces_rainbow_edge(&c, &f) {
@@ -77,10 +65,13 @@ where
             let i = g.node_to_i[&v];
             let first_color = c.0[i];
             for t in colors.iter() {
-                if !(t < &first_color) {
+                if t == &first_color {
                     continue;
                 }
                 let new_c = c.mutate(i, *t);
+                if !Coloring::is_eq(&new_c) {
+                    continue;
+                }
                 match det_local_search(states, colors, g, new_c, &f) {
                     Some(c) => return Some(c),
                     None => {}

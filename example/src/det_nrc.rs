@@ -11,7 +11,7 @@ pub fn no_rainbow_coloring<X, C, const R: usize>(
 ) -> (usize, Option<Coloring<C>>)
 where
     X: Ord + Copy + Debug,
-    C: Ord + Copy,
+    C: Ord + Copy + Debug,
 {
     assert_eq!(colors.iter().collect::<BTreeSet<&C>>().len(), R);
 
@@ -19,16 +19,18 @@ where
     let n = g.node_to_i.len();
     for picked in g.node_to_i.iter().combinations(R) {
         let f = picked.iter().map(|(x, _)| **x).collect::<BTreeSet<X>>();
-        let mut c = vec![colors[0]; n];
-        for (t, (_, i)) in colors.iter().zip(picked.iter()) {
-            c[**i] = *t;
-        }
 
-        match det_local_search(&mut states, colors, g, Coloring(c), &f, (R - 1) * n / R) {
-            Some(out) => return (states, Some(out)),
-            None => continue,
+        for start in 0..R {
+            let mut c = vec![colors[start]; n];
+            for (t, (_, i)) in colors.iter().zip(picked.iter()) {
+                c[**i] = *t;
+            }
+
+            match det_local_search(&mut states, colors, g, Coloring(c), &f, (R - 1) * n / R) {
+                Some(out) => return (states, Some(out)),
+                None => continue,
+            }
         }
-        return (states, None);
     }
     (states, None)
 }
@@ -43,7 +45,7 @@ fn det_local_search<X, C, const R: usize>(
 ) -> Option<Coloring<C>>
 where
     X: Ord + Copy + Debug,
-    C: Ord + Copy,
+    C: Ord + Copy + Debug,
 {
     *states += 1;
     if d == 0 && g.contains_rainbow_edge(&c) {

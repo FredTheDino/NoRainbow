@@ -56,7 +56,7 @@ where
         return None;
     }
 
-    pub fn induces_rainbow_edge<C: Ord + Copy>(
+    pub fn induces_rainbow_edge<C: Ord + Copy + Debug>(
         &self,
         coloring: &Coloring<C>,
         frozen: &BTreeSet<X>,
@@ -78,7 +78,7 @@ where
         return false;
     }
 
-    pub fn contains_rainbow_edge<C: Ord + Copy>(&self, coloring: &Coloring<C>) -> bool {
+    pub fn contains_rainbow_edge<C: Ord + Copy + Debug>(&self, coloring: &Coloring<C>) -> bool {
         'outer: for edge in self.edges.iter() {
             let mut seen = BTreeSet::new();
             for n in edge {
@@ -93,7 +93,7 @@ where
         return false;
     }
 
-    pub fn is_no_rainbow_coloring<C: Ord + Copy>(&self, coloring: &Coloring<C>) -> bool {
+    pub fn is_no_rainbow_coloring<C: Ord + Copy + Debug>(&self, coloring: &Coloring<C>) -> bool {
         coloring.used_colors() == R && !self.contains_rainbow_edge(coloring)
     }
 
@@ -104,7 +104,12 @@ where
             .map(|x| x.into_iter().cloned().collect::<BTreeSet<X>>())
             .collect::<Vec<BTreeSet<X>>>();
         let mut rng = &mut rand::thread_rng();
-        Self::new_from_set(all_edges.choose_multiple(&mut rng, (all_edges.len() as f64 * to_keep) as usize).cloned().collect())
+        Self::new_from_set(
+            all_edges
+                .choose_multiple(&mut rng, (all_edges.len() as f64 * to_keep) as usize)
+                .cloned()
+                .collect(),
+        )
     }
 
     pub fn complete(nodes: &[X]) -> MultiGraph<X, R> {
@@ -118,10 +123,10 @@ where
     }
 }
 
-#[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
-pub struct Coloring<C: Ord + Copy>(pub Vec<C>);
+#[derive(Debug, Ord, PartialOrd, Eq, PartialEq, Clone)]
+pub struct Coloring<C: Ord + Copy + Debug>(pub Vec<C>);
 
-impl<C: Ord + Copy> Coloring<C> {
+impl<C: Ord + Copy + Debug> Coloring<C> {
     pub fn is_same_cat(ax: &Coloring<C>, bx: &Coloring<C>) -> bool {
         ax.to_cat() == bx.to_cat()
     }
@@ -146,6 +151,28 @@ impl<C: Ord + Copy> Coloring<C> {
             }
         }
         n
+    }
+
+    pub fn is_eq(&self) -> bool {
+        let asc = self
+            .0
+            .clone()
+            .into_iter()
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let mut i = 0;
+        for c in self.0.iter() {
+            if c <= &asc[i] {
+                continue;
+            }
+
+            i += 1;
+            if c != &asc[i] {
+                return false;
+            }
+        }
+        true
     }
 }
 
@@ -206,6 +233,11 @@ mod tests {
     fn surr_5() { surjectivity::<1, 4>([1, 1, 1, 1]) }
     #[test]
     fn surr_6() { surjectivity::<1, 5>([1, 1, 1, 1, 1]) }
+
+    #[test]
+    fn test_eq() {
+        assert!(Coloring(vec![1, 2, 3, 2, 1]).is_eq())
+    }
 
     #[test]
     fn test_multigraph() {
