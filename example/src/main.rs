@@ -69,10 +69,7 @@ graph G {{
     println!("=== DOT END ===");
 }
 
-fn run_for_all<X, C, const R: usize>(
-    g: &multigraph::MultiGraph<X, R>,
-    colors: [C; R],
-) -> (Duration, usize, Duration, usize)
+fn run_for_all<X, C, const R: usize>(g: &multigraph::MultiGraph<X, R>, colors: [C; R])
 where
     X: Ord + Copy + Debug,
     C: Ord + Copy + Debug,
@@ -85,41 +82,60 @@ where
     let (me_states, me) = my_nrc::no_rainbow_coloring(g, colors);
     let me_took = me_start.elapsed();
 
-    let corr = me.clone(); // complete_nrc::no_rainbow_coloring(g, colors);
+    //let corr = complete_nrc::no_rainbow_coloring(g, colors);
 
     let det_correct = det.as_ref().map(|c| g.is_no_rainbow_coloring(&c));
     let me_corrrect = me.as_ref().map(|c| g.is_no_rainbow_coloring(&c));
-    let corr_correct = corr.as_ref().map(|c| g.is_no_rainbow_coloring(&c));
+    // let corr_correct = corr.as_ref().map(|c| g.is_no_rainbow_coloring(&c));
 
-    if det.is_some() != me.is_some() || det.is_some() != corr.is_some() {
+    assert!(matches!(det_correct, Some(true) | None));
+    assert!(matches!(me_corrrect, Some(true) | None));
+
+    if det.is_some() != me.is_some() {
         print_dot(&g, &det.clone().or(me.clone()).unwrap());
 
         panic!(
-            "\n\n det: {:?}  {:?}\n me: {:?}  {:?}\n corr: {:?}  {:?}\n\n for \n\n{:?}",
-            det, det_correct, me, me_corrrect, corr, corr_correct, g,
+            "\n\n det: {:?}  {:?}\n me: {:?}  {:?}\n\n for \n\n{:?}",
+            det, det_correct, me, me_corrrect, g,
         );
     }
-    (det_took, det_states, me_took, me_states)
+    let n = g.node_to_i.len();
+    println!(
+        "{{ r: {}, n: {}, det_states: {}, det_time: {}, me_states: {}, me_time: {}  }}",
+        R,
+        n,
+        det_states,
+        det_took.as_millis(),
+        me_states,
+        me_took.as_millis()
+    );
+}
+
+fn run_X_and_block<const R: usize>(n: u32, c: [Color; R]) {
+    let mut threads = Vec::new();
+    for _i in 0..7 {
+        let n = n.clone();
+        let c = c.clone();
+        threads.push(std::thread::spawn(move || {
+            let xs = (0..n).collect::<Vec<_>>();
+            let rng = &mut rand::thread_rng();
+            let density = rng.gen::<f64>(); // 0.0 - 1.0
+            let g: multigraph::MultiGraph<u32, R> = multigraph::MultiGraph::random(density, &xs);
+            run_for_all(&g, c);
+        }));
+    }
+
+    for t in threads.into_iter() {
+        t.join().unwrap();
+    }
 }
 
 fn main() {
-    let start = Instant::now();
-    for i in 4..50 {
-        let n = (0..i).collect::<Vec<_>>();
-
-        let mut a_max = 0;
-        let mut b_max = 0;
-        for _i in 0..100 {
-            let rng = &mut rand::thread_rng();
-            let density = rng.gen::<f64>() * 0.5 + 0.4; // 0.4 - 0.9
-            let c: multigraph::MultiGraph<u32, 3> = multigraph::MultiGraph::random(density, &n);
-            let (_, an, _, bn) = run_for_all(&c, C);
-            a_max = a_max.max(an);
-            b_max = b_max.max(bn);
+        for i in 4..30 {
+            run_X_and_block(i, [CA, CB, CC]);
+            run_X_and_block(i, [CA, CB, CC, CD]);
+            run_X_and_block(i, [CA, CB, CC, CD, CE]);
         }
-        println!("{} | {} states | {} states ~ {}", i, a_max, b_max, (a_max * 10) / (b_max * 10));
-    }
-    println!(" TOOK: {}ms", start.elapsed().as_millis());
 }
 
 #[cfg(test)]
@@ -130,15 +146,9 @@ mod tests {
     fn test_det() {
         let c = [1, 2, 3];
         {
-            let g = multigraph::MultiGraph::new(vec![
-                [0, 1, 3],
-                [0, 2, 4],
-                [1, 2, 3],
-                [1, 3, 4],
-            ]);
+            let g = multigraph::MultiGraph::new(vec![[0, 1, 3], [0, 2, 4], [1, 2, 3], [1, 3, 4]]);
             run_for_all(&g, c);
         }
-        return;
 
         {
             let g = multigraph::MultiGraph::new(vec![
