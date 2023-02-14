@@ -21,8 +21,6 @@ enum Color {
 }
 use Color::*;
 
-const C: [Color; 3] = [CA, CB, CC];
-
 fn print_dot<X, C, const R: usize>(
     g: &multigraph::MultiGraph<X, R>,
     coloring: &multigraph::Coloring<C>,
