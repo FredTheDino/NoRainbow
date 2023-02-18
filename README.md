@@ -31,7 +31,8 @@ def local_search( g: Graph, c: Coloring, f: Set<X>) -> Option<Coloring>:
       c' = c but c(v) = p
       # This is the only line that is different in my version
       if is_eq_representative(c'):
-        local_search(g, c', f + { v })
+        if c'' := local_search(g, c', f + { v }):
+          return c''
 ```
 We seed this algorithm with surjective (surjective means we use at least one of each color, if this is confusing you probably need to read more about the NoRainbow problem, but it is infact a big and scary word) colorings of the hypergraph in the same way the Parvini et. al. algorithm does. You can read the example code if you want to study this closer.
 
