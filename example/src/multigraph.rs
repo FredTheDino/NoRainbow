@@ -4,6 +4,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Debug;
 use std::marker::Copy;
 
+// NOTE: I missnamed this, it's supposed to be HyperGraph, I always mix up the names but I rarely
+// talk about MultiGraphs. I always mean hyper graphs.
+
 #[derive(Debug)]
 pub struct MultiGraph<X, const R: usize>
 where
