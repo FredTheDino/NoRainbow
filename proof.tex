@@ -1,0 +1,121 @@
+\documentclass{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Imports
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[backend=biber,sorting=none,hyperref]{biblatex}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{tikz}
+\usetikzlibrary{topaths,calc,tikzmark}
+\usepackage{algorithm2e}
+\usepackage{pgfgantt}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \department{Institutionen för datavetenskap}
+% \departmentenglish{Department of Computer and Information Science}
+% \departmentshort{IDA}
+
+% \supervisor{Peter Jonson}
+% \examiner{Herr. Namnjag Glömtson}
+% \titleenglish{A Faster Algorithm for Solving the No-Rainbow Problem}
+% \subtitleenglish{100\% rainbow-free guarantee}
+% \titleswedish{En snabbare algoritm för No-Rainbow problemet}
+% \thesissubject{Datavetenskap}
+
+% \publicationyear{2023}
+% \currentyearthesisnumber{001}
+% \dateofpublication{2023-01-20}
+
+% \addbibresource{thesis.bib}
+
+\newcommand\tikznode[3][]%
+   {\tikz[remember picture, baseline=(#2.base)]
+      \node[minimum size=0pt,inner sep=0pt,#1](#2){#3};%
+   }
+
+\title{A Faster Algorithm for Solving the No-Rainbow Problem}
+\author{Edvard Thörnros}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Proof
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Definitions and Other Lemmas}
+\begin{lemma}
+The average branching factor of an infinite tree is the average number of children for each node.
+\end{lemma}
+
+\begin{lemma}
+Two colorings $A$ and $B$ are equivalent in no-rainbow coloring validity if and only if the colors of $A$ can be renamed to give $B$.
+\end{lemma}
+
+\section{The algorithm}
+The algorithm is heavily inspired by \citeauthor{parvini} but with one small tweak. When descending further into the search tree only branches that start with a coloring that is also the representative of the equality-class based on no-rainbow coloring validity is explored.
+
+\begin{figure}[h!]
+\centering
+TODO - algorithm goes here
+\caption{My suggestion for a faster version of the deterministic algorithm for finding a no-rainbow coloring put forth by \citeauthor{parvini}}
+\label{alg:mine}
+\end{figure}
+
+\subsection{Correctness}
+We know that the algorithm we used as base is correct \cite{parvini} -- we only need to show that every surjective representative of the equality-class based on no-rainbow coloring validit is visited at least once.
+
+\begin{lemma}
+All representative surjective colorings are reachable from a top-node within edit distance $(n-r)/r$.
+\end{lemma}
+
+\begin{proof}
+Let $C$ be a representative surjective coloring, there has to be a representative top-node $N$ that agree with at most $n - (n-r)/r$ colors in the coloring -- this follows from a lemma in \cite{parvini}. If $N$ and $C$ have a largest index $i$ such that the colors do not match ($N_i \not{=} C_i$) we can generate a new color $C'$ with the colors of $C$ except for the index $i$ where we use the color $N_i$ instead, $C'_k = C_k : k \in { 0 \dots n } / { i }, C'_i = N_i$, if this largest index does not exist the colors are equal and we are connected.
+
+Since each representative color $C$ can be moved one step closer to a representative top-node $N$ we know we search all possible colorings and keep the validity property.
+\end{proof}
+
+\subsection{Asymtotical runtime analysis}
+The only thing that differs from \cite{parvini} is the branching factor for the infinite search trees, luckily we have a lemma for that.
+
+\begin{lemma}
+The average branching factor for the Algorithm \ref{alg:mine} is \\
+  $[ \int_0^1 \int_0^{a} (a/r) e^{-\frac{1}{2}(\frac{b - \mu}{\sigma})^2} \,db\,da ] / \int_0^1 e^{-\frac{1}{2}(\frac{x - \mu}{\sigma})^2} dx$ \\
+  where $\mu = 1/r$ and $\sigma = (1/r)(1 - 1/r)$.
+\end{lemma}
+
+\begin{proof}
+Consider an $r$-regular hypergraph with $n$ nodes. The if-statement in Algorithm \ref{alg:mine} is triggered exactly when the index of $v$ -- $v_i$ -- is less than or equal to the first index with at least a color $B$ (since we would otherwise try the pattern $ACB$ which is not a representative coloring), let's call the first index of the color $B$ something catchy like $B_i$.
+
+We can now do two very clever things -- the first is to replace both of these unknowns with stochastic variables. $v_i \sim \hat{v_i} \sim U_z(0, n)$, we are equally likely to pick any index so $v_i$ can be replaced with an integer uniformly distributed random variable. $B_i \sim \hat{B_i} \sim B(1/r, n)$, the motivation here is a bit more tricky, but we can split each coloring tuple into $r$ sections, one where only $A$ is allowed, one where $A$ and $B$ is allowed and so on, and we know that the length of all of these sections has to be exactly $n$. With this knowledge at hand we can imaging giving each section the chance to grow $n$ times with a likelihood of the number of sections -- $r$. Since we only care about the first section, we only care about the number of times we pick the first section, which is the sum of $n$ choices each with chance $1/r$ -- this gives us the binomial distribution. The second clever thing we can do is to apply even more statistics, since $n$ is infinitely large we can swap to the continues versions of these distributions (this is valid when $n > 5$, so I feel no shame in doing it here), while we're at it we can remap $n$ from infinity to $1$ to make our reasoning simpler. 
+
+After all of these very clever operations we have a uniform random variable for the index $\hat{\hat{v_{i}}} \sim U(0, 1)$, and a normal distribution $\hat{\hat{B_i}} = N(1/r, 1(1/r)(1 - 1/r))$. The new continues stochastic variables are signaled with an extra hat, since I don't want them getting cold. We can now calculate the probability of the branching factor being $r - 2$, which is the same as $p(\hat{\hat{v_{i}}} < \hat{\hat{B_i}})$. Luckily we know the probability density function of these two distributions, and the random variables are in a continues domain now, this leaves only one thing, calculus. For this, we do a double integral to sum all the infinite probabilities. We also have to remember that the normal distribution is a bit leaky, and it should not assume values outside the range $[0, 1]$, we correct for this with a scaling term and picking the integration limits suitably. This gives us:
+
+\begin{gather*}
+  \text{let} \quad{} \mu = 1/r, \quad{} \sigma = (1/r)(1 - 1/r) \\
+  p(\hat{\hat{v_{i}}} < \hat{\hat{B_i}}) = \\
+  = [\
+   \int_0^1 \
+    \int_0^{a} \
+      (a/r)  \
+      e^{-\frac{1}{2}(\frac{b - \mu}{\sigma})^2} \
+   \, db\,da
+    ]    /\int_0^1 e^{-\frac{1}{2}(\frac{x - \mu}{\sigma})^2} dx \\
+\end{gather*}
+
+This integral is a but cumbersome to work with, but we can use it to give a good estimate of the probability of fewer branches for $r=3$ and $r=4$.
+
+\end{proof}
+
+We can now estimate this branching factor using a computer, to get a ruff idea of what values it assumes. We can also use this to verify parts of the mathematical reasoning. We can randomly generate the stochastic variables and also estimate the integral.
+
+
+\end{document}
